@@ -125,10 +125,10 @@ void Client::ClanTag( )
 		using SetClanTag_t = int( __fastcall* )( const char*, const char* );
 		static auto SetClanTagFn = pattern::find( g_csgo.m_engine_dll, XOR( "53 56 57 8B DA 8B F9 FF 15" ) ).as<SetClanTag_t>( );
 		
-		SetClanTagFn( tag.c_str( ), XOR( "Fallout " ) );
+		SetClanTagFn( tag.c_str( ), XOR( "stellarcheat " ) );
 	};
 
-	std::string szClanTag = XOR( "Fallout " );
+	std::string szClanTag = XOR( "stellarcheat " );
 	std::string szSuffix = XOR( "" );
 	static int iPrevFrame = 0;
 	static bool bReset = false;
@@ -582,7 +582,7 @@ void Client::print( const std::string text, ... ) {
 	Color clr = g_cfg[ XOR( "menu_color" ) ].get_color( );
 
 	// print to console.
-	g_csgo.m_cvar->ConsoleColorPrintf( clr, XOR( "[ Fallout ] " ) );
+	g_csgo.m_cvar->ConsoleColorPrintf( clr, XOR( "[ stellarcheat ] " ) );
 	g_csgo.m_cvar->ConsoleColorPrintf( colors::white, buf.append( XOR( "\n" ) ).c_str( ) );
 }
 

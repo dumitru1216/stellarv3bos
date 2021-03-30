@@ -51,6 +51,7 @@ void render::line( vec2_t v0, vec2_t v1, Color color ) {
 	g_csgo.m_surface->DrawLine( v0.x, v0.y, v1.x, v1.y );
 }
 
+
 void render::world_circle(vec3_t origin, float radius, float angle, float scale, Color color) {
     std::vector< Vertex > vertices{};
 

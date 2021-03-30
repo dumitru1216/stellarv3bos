@@ -67,9 +67,92 @@ bool Gui::Control::IsPossible( ) {
 		Gui::m_Control.m_Opened
 		[ Gui::m_Control.ControlType::BIND ] == -1;
 }
+
+/* drawing related */
+void GradientHorizontalPrototype2( vec2_t a, vec2_t b, Color c_a, Color c_b )
+{
+	b += a;
+
+	VerticeT verts[ 4 ] = {
+		{ a.x, a.y, 0.01f, 0.01f, D3DCOLOR_RGBA( c_a.r( ), c_a.g( ), c_a.b( ), c_a.a( ) ) },
+		{ b.x, a.y, 0.01f, 0.01f, D3DCOLOR_RGBA( c_b.r( ), c_b.g( ), c_b.b( ), c_b.a( ) ) },
+		{ a.x, b.y, 0.01f, 0.01f, D3DCOLOR_RGBA( c_a.r( ), c_a.g( ), c_a.b( ), c_a.a( ) ) },
+		{ b.x, b.y, 0.01f, 0.01f, D3DCOLOR_RGBA( c_b.r( ), c_b.g( ), c_b.b( ), c_b.a( ) ) }
+	};
+
+	DrawList.dev->SetTexture( 0, nullptr );
+	DrawList.dev->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, &verts, 20 );
+}
+void GradientVerticalPrototype2( vec2_t a, vec2_t b, Color c_a, Color c_b )
+{
+	b += a;
+
+	VerticeT verts[ 4 ] = {
+		{ a.x, a.y, 0.01f, 0.01f, D3DCOLOR_RGBA( c_a.r( ), c_a.g( ), c_a.b( ), c_a.a( ) ) },
+		{ b.x, a.y, 0.01f, 0.01f, D3DCOLOR_RGBA( c_a.r( ), c_a.g( ), c_a.b( ), c_a.a( ) ) },
+		{ a.x, b.y, 0.01f, 0.01f, D3DCOLOR_RGBA( c_b.r( ), c_b.g( ), c_b.b( ), c_b.a( ) ) },
+		{ b.x, b.y, 0.01f, 0.01f, D3DCOLOR_RGBA( c_b.r( ), c_b.g( ), c_b.b( ), c_b.a( ) ) }
+	};
+
+	DrawList.dev->SetTexture( 0, nullptr );
+	DrawList.dev->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, &verts, 20 );
+}
+void GradientVertical2( float x, float y, float w, float h, Color c_a, Color c_b )
+{
+	GradientVerticalPrototype2( { x, y }, { w, h }, c_a, c_b );
+}
+void GradientHorizontal2( float x, float y, float w, float h, Color c_a, Color c_b )
+{
+	GradientHorizontalPrototype2( { x, y }, { w, h }, c_a, c_b );
+}
+void FilledPrototype2( vec2_t a, vec2_t b, Color c )
+{
+	b += a;
+
+	VerticeT verts[ 4 ] = {
+		{ a.x, a.y, 0.01f, 0.01f, D3DCOLOR_RGBA( c.r( ), c.g( ), c.b( ), c.a( ) ) },
+		{ b.x, a.y, 0.01f, 0.01f, D3DCOLOR_RGBA( c.r( ), c.g( ), c.b( ), c.a( ) ) },
+		{ a.x, b.y, 0.01f, 0.01f, D3DCOLOR_RGBA( c.r( ), c.g( ), c.b( ), c.a( ) ) },
+		{ b.x, b.y, 0.01f, 0.01f, D3DCOLOR_RGBA( c.r( ), c.g( ), c.b( ), c.a( ) ) }
+	};
+
+	DrawList.dev->SetTexture( 0, nullptr );
+	DrawList.dev->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, &verts, 20 );
+}
+void Gui::ExternalRendering::FilledRect2( float x, float y, float w, float h, Color c )
+{
+	FilledPrototype2( { x, y }, { w, h }, c );
+}
+void RectPrototype2( vec2_t a, vec2_t b, Color c )
+{
+	b += a;
+
+	b.x -= 1;
+	b.y -= 1;
+
+	VerticeT verts[ 5 ] = {
+		{ float( a.x ), float( a.y ), 0.01f, 0.01f, D3DCOLOR_RGBA( c.r(), c.g(), c.b(), c.a() ) },
+		{ float( b.x ), float( a.y ), 0.01f, 0.01f, D3DCOLOR_RGBA( c.r(), c.g(), c.b(), c.a() ) },
+		{ float( b.x ), float( b.y ), 0.01f, 0.01f, D3DCOLOR_RGBA( c.r(), c.g(), c.b(), c.a() ) },
+		{ float( a.x ), float( b.y ), 0.01f, 0.01f, D3DCOLOR_RGBA( c.r(), c.g(), c.b(), c.a() ) },
+		{ float( a.x ), float( a.y ), 0.01f, 0.01f, D3DCOLOR_RGBA( c.r(), c.g(), c.b(), c.a() ) }
+	};
+
+	DrawList.dev->SetTexture( 0, nullptr );
+	DrawList.dev->DrawPrimitiveUP( D3DPT_LINESTRIP, 4, &verts, 20 );
+}
+void Rect2( float x, float y, float w, float h, Color c )
+{
+	RectPrototype2( { x, y }, { w + 1, h + 1 }, c );
+}
+
+/* install */
 void Gui::ExternalRendering::Install( ) {
 	for ( size_t i{ 0 }; i < RectDraw.size( ); i++ )
 		DrawList.FilledRect( RectDraw[ i ].posX, RectDraw[ i ].posY, RectDraw[ i ].m_Width, RectDraw[ i ].m_Height, RectDraw[ i ].m_color_t );
+
+	for ( size_t i{ 0 }; i < RectDraw2.size( ); i++ )
+		FilledRect2( RectDraw2[ i ].posX, RectDraw2[ i ].posY, RectDraw2[ i ].m_Width, RectDraw2[ i ].m_Height, RectDraw2[ i ].m_color_t );
 
 	for ( size_t i{ 0 }; i < GradientHDraw.size( ); i++ )
 		DrawList.GradientHorizontal( GradientHDraw[ i ].posX, GradientHDraw[ i ].posY, GradientHDraw[ i ].m_Width, GradientHDraw[ i ].m_Height, GradientHDraw[ i ].m_color_t, GradientHDraw[ i ].m_color_tNext );
@@ -77,17 +160,33 @@ void Gui::ExternalRendering::Install( ) {
 	for ( size_t i{ 0 }; i < GradientVDraw.size( ); i++ )
 		DrawList.GradientVertical( GradientVDraw[ i ].posX, GradientVDraw[ i ].posY, GradientVDraw[ i ].m_Width, GradientVDraw[ i ].m_Height, GradientVDraw[ i ].m_color_t, GradientVDraw[ i ].m_color_t );
 
+	for ( size_t i{ 0 }; i < GradientHDraw2.size( ); i++ )
+		GradientHorizontal2( GradientHDraw2[ i ].posX, GradientHDraw2[ i ].posY, GradientHDraw2[ i ].m_Width, GradientHDraw2[ i ].m_Height, GradientHDraw2[ i ].m_color_t, GradientHDraw2[ i ].m_color_tNext );
+
+	for ( size_t i{ 0 }; i < GradientVDraw2.size( ); i++ )
+		GradientVertical2( GradientVDraw2[ i ].posX, GradientVDraw2[ i ].posY, GradientVDraw2[ i ].m_Width, GradientVDraw2[ i ].m_Height, GradientVDraw2[ i ].m_color_t, GradientVDraw2[ i ].m_color_t );
+
 	for ( size_t i{ 0 }; i < OutlineDraw.size( ); i++ )
 		DrawList.Rect( OutlineDraw[ i ].posX, OutlineDraw[ i ].posY, OutlineDraw[ i ].m_Width, OutlineDraw[ i ].m_Height, OutlineDraw[ i ].m_color_t );
+
+	for ( size_t i{ 0 }; i < OutlineDraw2.size( ); i++ )
+		Rect2( OutlineDraw2[ i ].posX, OutlineDraw2[ i ].posY, OutlineDraw2[ i ].m_Width, OutlineDraw2[ i ].m_Height, OutlineDraw2[ i ].m_color_t );
 
 	for ( size_t i{ 0 }; i < TextDraw.size( ); i++ )
 		DrawList.DrawString( { TextDraw[ i ].posX, TextDraw[ i ].posY }, TextDraw[ i ].m_Text, TextDraw[ i ].m_color_t, Fonts::Main, font_flags::drop_shadow );
 
+	/* clear */
 	RectDraw.clear( );
 	OutlineDraw.clear( );
 	GradientHDraw.clear( );
 	GradientVDraw.clear( );
 	TextDraw.clear( );
+
+	/* clear */
+	RectDraw2.clear( );
+	OutlineDraw2.clear( );
+	GradientHDraw2.clear( );
+	GradientVDraw2.clear( );
 }
 
 /* config related */
@@ -148,7 +247,7 @@ void Gui::Details::Install( ) {
 		auto rage_main = new Groupbox( "rage main", 0, 19, 45, 208, 125, 0 );
 		{
 			m_Window->AddGroup( rage_main );
-			rage_main->AddElement( new Checkbox( "enable aimbot", &g_loser.rage.rage_aimbot_enabled ) );
+			rage_main->AddElement( new Checkbox( "enable ragebot", &g_loser.rage.rage_aimbot_enabled ) );
 			rage_main->AddElement( new Checkbox( "limit fov ( semirage )", &g_loser.rage.rage_aimbot_limit_fov ) );
 			if ( g_loser.rage.rage_aimbot_limit_fov ) {
 				rage_main->AddElement( new Slider( "limit fov ammount", &g_loser.rage.rage_aimbot_limit_fov_amount, 0, 10, "%" ) );
@@ -229,7 +328,11 @@ void Gui::Details::Install( ) {
 		auto m_visuals_players = new Groupbox( "Players", 12, 19, 45, 208, 270, 2 );
 		{
 			m_Window->AddGroup( m_visuals_players );
-
+			m_visuals_players->AddElement( new Checkbox( "bounding box", &g_loser.player_esp.enemies_box ) );
+			m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.enemies_box_color, &g_loser.player_esp.hue_box ) );\
+			if ( g_loser.player_esp.enemies_box ) {
+				m_visuals_players->AddElement( new Checkbox( "box outline", &g_loser.player_esp.box_outline ) );
+			}
 		} delete m_visuals_players;
 
 		auto m_visuals_chams = new Groupbox( "Chams", 10, 250, 45, 208, 95, 2 );

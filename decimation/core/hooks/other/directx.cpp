@@ -40,6 +40,9 @@ HRESULT WINAPI Hooks::Present( IDirect3DDevice9* pDevice, RECT* pRect1, const RE
 		DrawList.Init( pDevice );
 		DrawList.SetupRenderStates( );
 
+		/* visuals */
+//		visuals.draw_visuals( );
+
 		/* new menu */
 		Gui::m_Details.Install( );
 

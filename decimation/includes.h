@@ -105,6 +105,8 @@ using ulong_t = unsigned long;
 #include "hack/events.h"
 #include "hack/hitsounds.h"
 #include "hack/shots.h"
+#include "hack/m_visuals/m_players/m_players.h"
+#include "new_gui/new_framework/m_render/m_color.h"
 
 // gui includes.
 #include "util/contrib/base64.h"
@@ -112,6 +114,7 @@ using ulong_t = unsigned long;
 #include "config.h"
 
 #include "Rendering/Renderer.h"
+#include "new_gui/new_framework/m_render/m_render.h"
 
 #include "gui/Helpers/Easing.h"
 #include "gui/Framework/GUI.h"

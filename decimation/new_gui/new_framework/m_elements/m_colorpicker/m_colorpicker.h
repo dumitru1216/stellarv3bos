@@ -5,7 +5,7 @@
 class ColorPicker : public Base {
 public:
 	/* drawing shits and values */
-	ColorPicker( color_t* m_Select, float* m_Hue, bool m_Alpha = false );
+	ColorPicker( Color* m_Select, float* m_Hue, bool m_Alpha = false );
 
 	void Draw( );
 	void Update( );
@@ -21,5 +21,5 @@ private:
 	float* m_Hue;
 	float m_Alpha;
 
-	color_t* m_Select;
+	Color* m_Select;
 };

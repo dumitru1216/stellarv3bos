@@ -156,6 +156,7 @@
     <ClInclude Include="hack\animations.h" />
     <ClInclude Include="hack\game_movement.h" />
     <ClInclude Include="hack\hitsounds.h" />
+    <ClInclude Include="hack\m_visuals\m_players\m_players.h" />
     <ClInclude Include="hack\tickbase_shift.h" />
     <ClInclude Include="include\ft2build.h" />
     <ClInclude Include="include\imgui\imconfig.h" />
@@ -405,6 +406,7 @@
     <ClCompile Include="core\hooks\game\firebullets.cpp" />
     <ClCompile Include="hack\game_movement.cpp" />
     <ClCompile Include="hack\hitsounds.cpp" />
+    <ClCompile Include="hack\m_visuals\m_players\m_players.cpp" />
     <ClCompile Include="hack\tickbase_shift.cpp" />
     <ClCompile Include="include\imgui\imgui.cpp" />
     <ClCompile Include="include\imgui\imgui_draw.cpp" />

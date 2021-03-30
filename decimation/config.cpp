@@ -463,10 +463,10 @@ void Config::save(std::string name, bool to_clipboard) {
 	file = tfm::format(XOR("%s\\%s"), m_path.data(), name.data());
 
 	for (auto& e : g_cfg) {
-		WritePrivateProfileStringA(XOR("Fallout"), e.first.c_str(), std::to_string(e.second.get<double>()).c_str(), file.c_str());
+		WritePrivateProfileStringA(XOR(""), e.first.c_str(), std::to_string(e.second.get<double>()).c_str(), file.c_str());
 	}
 
-	g_notify.add(XOR("successfully saved config"));
+	//g_notify.add(XOR("successfully saved config"));
 }
 
 void Config::load(std::string name, bool from_clipboard) {
@@ -480,18 +480,18 @@ void Config::load(std::string name, bool from_clipboard) {
 	for (auto& e : g_cfg) {
 		char value[64] = { '\0' };
 
-		GetPrivateProfileStringA(XOR("Fallout"), e.first.c_str(), "", value, 64, file.c_str());
+		GetPrivateProfileStringA(XOR(""), e.first.c_str(), "", value, 64, file.c_str());
 
 		e.second.set<double>(atof(value));
 	}
 
-	g_notify.add(XOR("successfully loaded config"));
+	//g_notify.add(XOR("successfully loaded config"));
 }
 
 
 bool zaebal::ConfigThings::Save(std::string file_name)
 {
-	std::string file_path = "C:\\immortality\\Configs\\" + file_name + ".cfg";
+	std::string file_path = "C:\\stellarcheat\\Configs\\" + file_name + ".cfg";
 
 	std::fstream file(file_path, std::ios::out | std::ios::in | std::ios::trunc);
 	file.close();
@@ -520,7 +520,7 @@ bool zaebal::ConfigThings::Save(std::string file_name)
 
 bool zaebal::ConfigThings::Load(std::string file_name)
 {
-	std::string file_path = "C:\\immortality\\Configs\\" + file_name + ".cfg";
+	std::string file_path = "C:\\stellarcheat\\Configs\\" + file_name + ".cfg";
 
 	std::fstream file;
 	file.open(file_path, std::ios::out | std::ios::in);
@@ -562,7 +562,7 @@ bool zaebal::ConfigThings::Load(std::string file_name)
 
 bool zaebal::ConfigThings::Remove(std::string file_name)
 {
-	std::string file_path = "C:\\immortality\\Configs\\" + file_name + ".cfg";
+	std::string file_path = "C:\\stellarcheat\\Configs\\" + file_name + ".cfg";
 	remove(file_path.c_str());
 
 	return true;
@@ -570,7 +570,7 @@ bool zaebal::ConfigThings::Remove(std::string file_name)
 
 void zaebal::ConfigThings::CreateConfig(std::string name)
 {
-	std::ofstream ofs("C:\\immortality\\Configs\\" + name + ".cfg");
+	std::ofstream ofs("C:\\stellarcheat\\Configs\\" + name + ".cfg");
 }
 
 std::vector<std::string> zaebal::ConfigThings::GetConfigs()
@@ -578,7 +578,7 @@ std::vector<std::string> zaebal::ConfigThings::GetConfigs()
 	std::vector<std::string> configs;
 
 	WIN32_FIND_DATA ffd;
-	auto directory = "C:\\immortality\\Configs\\*";
+	auto directory = "C:\\stellarcheat\\Configs\\*";
 	auto hFind = FindFirstFile(directory, &ffd);
 
 	while (FindNextFile(hFind, &ffd))

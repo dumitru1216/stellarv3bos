@@ -1,5 +1,12 @@
 #pragma once
-
+enum m_ent_list {
+	m_enemy,
+	m_team,
+	m_local,
+	m_hands,
+	m_weapon,
+	m_size
+};
 
 class value {
 public:
@@ -129,7 +136,8 @@ public:
 		Color name_team_color = Color(255, 255, 255);
 		bool enemies_dormant;
 		bool enemies_box;
-		Color enemies_box_color = Color(255, 255, 255);
+		Color enemies_box_color;
+		float hue_box = 100.f;
 		bool team_box;
 		Color team_box_color = Color(255, 255, 255);
 		bool enemies_skeleton;
@@ -151,8 +159,8 @@ public:
 		bool enemies_flags[4] = { false, false, false, false };
 		bool enemies_ammo;
 		Color enemies_ammo_color = Color(255, 255, 255);
-		float box_horizontal = 0.f;
-		float box_vertical = 0.f;
+		float box_horizontal = 100.f;
+		float box_vertical = 100.f;
 		bool box_outline;
 		bool enemy_glow;
 		Color enemy_glow_color = Color(255, 255, 255);

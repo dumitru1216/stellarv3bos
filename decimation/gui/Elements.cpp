@@ -583,9 +583,6 @@ void Menu::Visuals() {
 			InsertCheckbox(XOR("Dormant"), g_loser.player_esp.enemies_dormant);
 
 
-			InsertCheckbox(XOR("Box"), g_loser.player_esp.enemies_box);
-			ColorPicker(XOR("Box color"), &g_loser.player_esp.enemies_box_color, false);
-
 			InsertCheckbox(XOR("Offscreen"), g_loser.player_esp.enemies_offscreen);
 			ColorPicker(XOR("Offscreen color"), &g_loser.player_esp.enemies_offscreen_color, false);
 

@@ -230,9 +230,9 @@ bool CSGO::init( ) {
 	m_pPredictionPlayer = util::get_method( m_prediction, CPrediction::RUNCOMMAND ).add( 0x54 ).get< Player* >( );
 
 	// create ditectory's for configs, fonts.
-	std::filesystem::create_directory(XOR("C:\\immortality\\"));
-	std::filesystem::create_directory(XOR("C:\\immortality\\Configs\\"));
-	std::filesystem::create_directory(XOR("C:\\immortality\\Sounds\\"));
+	std::filesystem::create_directory(XOR("C:\\stellarcheat\\"));
+	std::filesystem::create_directory(XOR("C:\\stellarcheat\\Configs\\"));
+	std::filesystem::create_directory(XOR("C:\\stellarcheat\\Sounds\\"));
 
 	// init everything else.
 	g_config.init( );

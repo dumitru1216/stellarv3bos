@@ -268,7 +268,6 @@ public:
 		m_a = static_cast<unsigned char>(_a * 255.0f);
 	}
 
-
 	// member accessors.
 	__forceinline uint8_t& r( ) { return m_r; }
 	__forceinline uint8_t& g( ) { return m_g; }

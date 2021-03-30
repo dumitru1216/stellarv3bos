@@ -134,14 +134,14 @@ RGB HSV_TO_RGB( const HSV& In )
 }
 
 /* setup colorpicker */
-ColorPicker::ColorPicker( color_t* m_Select, float* m_Hue, bool m_Alpha ) {
+ColorPicker::ColorPicker( Color* m_Select, float* m_Hue, bool m_Alpha ) {
 	this->m_Select = m_Select;
 	this->m_AlphaBar = m_Alpha;
 
 	HSV NewColor = RGB_TO_HSV( {
-		( double )( ( float )m_Select->r / 255.f ),
-		( double )( ( float )m_Select->g / 255.f ),
-		( double )( ( float )m_Select->b / 255.f )
+		( double )( ( float )m_Select->r() / 255.f ),
+		( double )( ( float )m_Select->g() / 255.f ),
+		( double )( ( float )m_Select->b() / 255.f )
 		} );
 
 	this->m_Hue = m_Hue;
@@ -149,37 +149,37 @@ ColorPicker::ColorPicker( color_t* m_Select, float* m_Hue, bool m_Alpha ) {
 	this->m_CursorPos.y = 150.f - ( ( float )NewColor.v * 150.f );
 
 	if ( m_Alpha )
-		this->m_Alpha = ( float )m_Select->a / 255.f;
+		this->m_Alpha = ( float )m_Select->a() / 255.f;
 	else
 		this->m_Alpha = 1.0f;
 }
 
 /* get color */
-static color_t GetColor( int i ) {
+static Color GetColor( int i ) {
 	auto ST = m_AlphaIn[ Gui::m_Control.GetIndex( ) ];
 
 	switch ( i )
 	{
 	case 0:
-		return color_t( 255, 0, 0, ST );
+		return Color( 255, 0, 0, ST );
 		break;
 	case 1:
-		return color_t( 255, 255, 0, ST );
+		return Color( 255, 255, 0, ST );
 		break;
 	case 2:
-		return color_t( 0, 255, 0, ST );
+		return Color( 0, 255, 0, ST );
 		break;
 	case 3:
-		return color_t( 0, 255, 255, ST );
+		return Color( 0, 255, 255, ST );
 		break;
 	case 4:
-		return color_t( 0, 0, 255, ST );
+		return Color( 0, 0, 255, ST );
 		break;
 	case 5:
-		return color_t( 255, 0, 255, ST );
+		return Color( 255, 0, 255, ST );
 		break;
 	case 6:
-		return color_t( 255, 0, 0, ST );
+		return Color( 255, 0, 0, ST );
 		break;
 	}
 }
@@ -252,8 +252,8 @@ void ColorPicker::Update( )
 			float m_Sat = m_CursorPos.x / 150.f;
 			float m_Bright = 1.f - ( m_CursorPos.y / 150.f );
 
-			//RGB NewColor = HSV_TO_RGB( { *m_Hue * 360.f, m_Sat, m_Bright } );
-			//*m_Select = color_t( int )( NewColor.r * 255.f ), ( int )( NewColor.g * 255.f ), ( int )( NewColor.b * 255.f ), ( int )( m_Alpha * 255.f );
+			RGB NewColor = HSV_TO_RGB( { *m_Hue * 360.f, m_Sat, m_Bright } );
+			*m_Select = Color((int)( NewColor.r * 255.f ), ( int )( NewColor.g * 255.f ), ( int )( NewColor.b * 255.f ), ( int )( m_Alpha * 255.f ));/*(int)*/
 		}
 	}
 }
@@ -264,7 +264,7 @@ void ColorPicker::Draw( )
 	DrawList.FilledRect( m_Pos.x + 9, m_Pos.y + 7, 6, 4, color_t( 255, 255, 255 ) );
 	DrawList.FilledRect( m_Pos.x + 2, m_Pos.y + 2, 6, 4, color_t( 255, 255, 255 ) );
 
-	DrawList.FilledRect( m_Pos.x + 2, m_Pos.y + 2, 13, 9, *m_Select );
+	Gui::m_External.FilledRect2( m_Pos.x + 2, m_Pos.y + 2, 13, 9, *m_Select );
 	DrawList.Rect( m_Pos.x, m_Pos.y, 16, 12, color_t( 130, 125, 150 ) );
 
 	if ( m_Focused )
@@ -285,34 +285,35 @@ void ColorPicker::Draw( )
 	{
 		if ( m_AlphaBar )
 		{
-			Gui::m_External.RectDraw.insert( Gui::m_External.RectDraw.begin( ), Gui::External::EDrawRect( m_Pos.x + 30, m_Pos.y + 163, 150, 11, *m_Select ) );
-			Gui::m_External.OutlineDraw.insert( Gui::m_External.OutlineDraw.begin( ), Gui::External::EDrawRect( m_Pos.x + 30, m_Pos.y + 163, 150, 11, color_t( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
-			Gui::m_External.OutlineDraw.insert( Gui::m_External.OutlineDraw.begin( ), Gui::External::EDrawRect( m_Pos.x + 30 + ( 146.f * m_Alpha ), m_Pos.y + 163, 4, 11, color_t( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
+			Gui::m_External.RectDraw2.insert( Gui::m_External.RectDraw2.begin( ), Gui::External::EDrawRect2( m_Pos.x + 30, m_Pos.y + 163, 150, 11, *m_Select ) );
+			Gui::m_External.OutlineDraw2.insert( Gui::m_External.OutlineDraw2.begin( ), Gui::External::EDrawRect2( m_Pos.x + 30, m_Pos.y + 163, 150, 11, Color( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
+			Gui::m_External.OutlineDraw2.insert( Gui::m_External.OutlineDraw2.begin( ), Gui::External::EDrawRect2( m_Pos.x + 30 + ( 146.f * m_Alpha ), m_Pos.y + 163, 4, 11, Color( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
 		}
 
-		Gui::m_External.RectDraw.insert( Gui::m_External.RectDraw.begin( ), Gui::External::EDrawRect( m_Pos.x + 23, m_Pos.y, 180, m_AlphaBar ? 180 : 164, color_t( 30, 20, 30, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
-		Gui::m_External.OutlineDraw.insert( Gui::m_External.OutlineDraw.begin( ), Gui::External::EDrawRect( m_Pos.x + 23, m_Pos.y, 180, m_AlphaBar ? 180 : 164, color_t( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
+		Gui::m_External.RectDraw2.insert( Gui::m_External.RectDraw2.begin( ), Gui::External::EDrawRect2( m_Pos.x + 23, m_Pos.y, 180, m_AlphaBar ? 180 : 164, Color( 30, 20, 30, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
+		Gui::m_External.OutlineDraw2.insert( Gui::m_External.OutlineDraw2.begin( ), Gui::External::EDrawRect2( m_Pos.x + 23, m_Pos.y, 180, m_AlphaBar ? 180 : 164, Color( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
 
-		Gui::m_External.OutlineDraw.insert( Gui::m_External.OutlineDraw.begin( ), Gui::External::EDrawRect( m_Pos.x + 29, m_Pos.y + 6, 151, 151, color_t( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
-		Gui::m_External.OutlineDraw.insert( Gui::m_External.OutlineDraw.begin( ), Gui::External::EDrawRect( m_Pos.x + 186, m_Pos.y + 6, 12, 151, color_t( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
+		Gui::m_External.OutlineDraw2.insert( Gui::m_External.OutlineDraw2.begin( ), Gui::External::EDrawRect2( m_Pos.x + 29, m_Pos.y + 6, 151, 151, Color( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
+		Gui::m_External.OutlineDraw2.insert( Gui::m_External.OutlineDraw2.begin( ), Gui::External::EDrawRect2( m_Pos.x + 186, m_Pos.y + 6, 12, 151, Color( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
 
 		RGB hue_color_t = HSV_TO_RGB( { ( double )*m_Hue * 360.f, 1.f, 1.f } );
-		Gui::m_External.GradientHDraw.insert( Gui::m_External.GradientHDraw.begin( ), Gui::External::EDrawGradient( m_Pos.x + 30, m_Pos.y + 7, 150, 150, color_t( 255, 255, 255, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ), color_t(
+		Gui::m_External.GradientHDraw2.insert( Gui::m_External.GradientHDraw2.begin( ), Gui::External::EDrawGradient2( m_Pos.x + 30, m_Pos.y + 7, 150, 150, Color( 255, 255, 255, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ), Color(
 			( int )( hue_color_t.r * 255.0f ),
 			( int )( hue_color_t.g * 255.0f ),
 			( int )( hue_color_t.b * 255.0f ),
 			m_AlphaIn[ Gui::m_Control.GetIndex( ) ]
 		) ) );
-		Gui::m_External.GradientVDraw.insert( Gui::m_External.GradientVDraw.begin( ), Gui::External::EDrawGradient( m_Pos.x + 30, m_Pos.y + 7, 150, 150, color_t( 0, 0, 0, 0 ), color_t( 0, 0, 0, 255 ) ) );
+		Gui::m_External.GradientVDraw2.insert( Gui::m_External.GradientVDraw2.begin( ), Gui::External::EDrawGradient2( m_Pos.x + 30, m_Pos.y + 7, 150, 150, Color( 0, 0, 0, 0 ), Color( 0, 0, 0, 255 ) ) );
 
-		Gui::m_External.GradientVDraw.insert( Gui::m_External.GradientVDraw.begin( ), Gui::External::EDrawGradient( m_Pos.x + 187, m_Pos.y + 7 + ( 25 * 0 ), 11, 25, GetColor( 0 ), GetColor( 1 ) ) );
-		Gui::m_External.GradientVDraw.insert( Gui::m_External.GradientVDraw.begin( ), Gui::External::EDrawGradient( m_Pos.x + 187, m_Pos.y + 7 + ( 25 * 1 ), 11, 25, GetColor( 1 ), GetColor( 2 ) ) );
-		Gui::m_External.GradientVDraw.insert( Gui::m_External.GradientVDraw.begin( ), Gui::External::EDrawGradient( m_Pos.x + 187, m_Pos.y + 7 + ( 25 * 2 ), 11, 25, GetColor( 2 ), GetColor( 3 ) ) );
-		Gui::m_External.GradientVDraw.insert( Gui::m_External.GradientVDraw.begin( ), Gui::External::EDrawGradient( m_Pos.x + 187, m_Pos.y + 7 + ( 25 * 3 ), 11, 25, GetColor( 3 ), GetColor( 4 ) ) );
-		Gui::m_External.GradientVDraw.insert( Gui::m_External.GradientVDraw.begin( ), Gui::External::EDrawGradient( m_Pos.x + 187, m_Pos.y + 7 + ( 25 * 4 ), 11, 25, GetColor( 4 ), GetColor( 5 ) ) );
-		Gui::m_External.GradientVDraw.insert( Gui::m_External.GradientVDraw.begin( ), Gui::External::EDrawGradient( m_Pos.x + 187, m_Pos.y + 7 + ( 25 * 5 ), 11, 25, GetColor( 5 ), GetColor( 6 ) ) );
+		/* done */
+		Gui::m_External.GradientVDraw2.insert( Gui::m_External.GradientVDraw2.begin( ), Gui::External::EDrawGradient2( m_Pos.x + 187, m_Pos.y + 7 + ( 25 * 0 ), 11, 25, GetColor( 0 ), GetColor( 1 ) ) );
+		Gui::m_External.GradientVDraw2.insert( Gui::m_External.GradientVDraw2.begin( ), Gui::External::EDrawGradient2( m_Pos.x + 187, m_Pos.y + 7 + ( 25 * 1 ), 11, 25, GetColor( 1 ), GetColor( 2 ) ) );
+		Gui::m_External.GradientVDraw2.insert( Gui::m_External.GradientVDraw2.begin( ), Gui::External::EDrawGradient2( m_Pos.x + 187, m_Pos.y + 7 + ( 25 * 2 ), 11, 25, GetColor( 2 ), GetColor( 3 ) ) );
+		Gui::m_External.GradientVDraw2.insert( Gui::m_External.GradientVDraw2.begin( ), Gui::External::EDrawGradient2( m_Pos.x + 187, m_Pos.y + 7 + ( 25 * 3 ), 11, 25, GetColor( 3 ), GetColor( 4 ) ) );
+		Gui::m_External.GradientVDraw2.insert( Gui::m_External.GradientVDraw2.begin( ), Gui::External::EDrawGradient2( m_Pos.x + 187, m_Pos.y + 7 + ( 25 * 4 ), 11, 25, GetColor( 4 ), GetColor( 5 ) ) );
+		Gui::m_External.GradientVDraw2.insert( Gui::m_External.GradientVDraw2.begin( ), Gui::External::EDrawGradient2( m_Pos.x + 187, m_Pos.y + 7 + ( 25 * 5 ), 11, 25, GetColor( 5 ), GetColor( 6 ) ) );
 
-		Gui::m_External.OutlineDraw.insert( Gui::m_External.OutlineDraw.begin( ), Gui::External::EDrawRect( m_Pos.x + 30 + ( 148.f * ( m_CursorPos.x / 150.0f ) ), m_Pos.y + 6 + ( 148.f * ( m_CursorPos.y / 150.f ) ), 4, 4, color_t( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
-		Gui::m_External.OutlineDraw.insert( Gui::m_External.OutlineDraw.begin( ), Gui::External::EDrawRect( m_Pos.x + 186, m_Pos.y + 6 + ( 146.f * *m_Hue ), 12, 4, color_t( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
+		Gui::m_External.OutlineDraw2.insert( Gui::m_External.OutlineDraw2.begin( ), Gui::External::EDrawRect2( m_Pos.x + 30 + ( 148.f * ( m_CursorPos.x / 150.0f ) ), m_Pos.y + 6 + ( 148.f * ( m_CursorPos.y / 150.f ) ), 4, 4, Color( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
+		Gui::m_External.OutlineDraw2.insert( Gui::m_External.OutlineDraw2.begin( ), Gui::External::EDrawRect2( m_Pos.x + 186, m_Pos.y + 6 + ( 146.f * *m_Hue ), 12, 4, Color( 130, 130, 170, m_AlphaIn[ Gui::m_Control.GetIndex( ) ] ) ) );
 	}
 }

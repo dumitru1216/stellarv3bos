@@ -30,6 +30,26 @@ namespace Gui {
 			color_t m_color_t;
 		};
 
+		struct EDrawRect2
+		{
+			EDrawRect2( float posX, float posY, float m_Width, float h, Color m_color_t )
+			{
+				this->posX = posX;
+				this->posY = posY;
+				this->m_Width = m_Width;
+				this->m_Height = h;
+				this->m_color_t = m_color_t;
+			}
+
+			float posX;
+			float posY;
+			float m_Width;
+			float m_Height;
+
+			Color m_color_t;
+		};
+
+
 		struct EDrawText
 		{
 			EDrawText( float posX, float posY, std::string m_Text, color_t m_color_t )
@@ -66,6 +86,27 @@ namespace Gui {
 
 			color_t m_color_t;
 			color_t m_color_tNext;
+		};
+
+		struct EDrawGradient2
+		{
+			EDrawGradient2( float posX, float posY, float m_Width, float h, Color m_color_t, Color m_color_tNext )
+			{
+				this->posX = posX;
+				this->posY = posY;
+				this->m_Width = m_Width;
+				this->m_Height = h;
+				this->m_color_t = m_color_t;
+				this->m_color_tNext = m_color_tNext;
+			}
+
+			float posX;
+			float posY;
+			float m_Width;
+			float m_Height;
+
+			Color m_color_t;
+			Color m_color_tNext;
 		};
 	}
 
@@ -191,31 +232,27 @@ namespace Gui {
 	public:
 
 		void Install( );
+		void FilledRect2( float x, float y, float w, float h, Color c );
 
 		std::vector< External::EDrawText > TextDraw;
+
 		std::vector< External::EDrawRect > RectDraw;
+		std::vector< External::EDrawRect2 > RectDraw2;
+
 		std::vector< External::EDrawRect > OutlineDraw;
+		std::vector< External::EDrawRect2 > OutlineDraw2;
+
 		std::vector< External::EDrawGradient > GradientVDraw;
 		std::vector< External::EDrawGradient > GradientHDraw;
+
+		std::vector< External::EDrawGradient2 > GradientVDraw2;
+		std::vector< External::EDrawGradient2 > GradientHDraw2;
 	};
 
 	class Config {
 	public:
-		void AddConfig( );
 		void LoadConfig( );
 		void SaveConfig( );
-		void Sort( );
-		void Refresh( );
-		void Delete( );
-
-		struct
-		{
-			std::vector<std::string> config_slots = { "slot 1", "slot 2", "slot 3", "slot 4" };
-
-			bool m_nCallSave = false;
-			bool m_nCallLoad = false;
-
-		} config_manager;
 	};
 
 	extern Gui::Input m_Input;
