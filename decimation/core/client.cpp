@@ -6,7 +6,7 @@ Client g_cl{ };
 // init routine.
 ulong_t __stdcall Client::init(void* arg) {
 
-	g_cl.m_user = XOR("[debug]");
+	g_cl.m_user = XOR("admin");
 
 
 	// stop here if we failed to acquire all the data needed from csgo.
@@ -18,15 +18,28 @@ ulong_t __stdcall Client::init(void* arg) {
 
 	return 1;
 }
-//const auto col_text = Color(255, 255, 255);
 
-//Color clr = g_cfg [ XOR( "menu_colow" ) ].get_color();
+void Client::DrawHUD( ) {
+	/* logo */
+	std::string logo = "stellarcheat";
 
-void Client::DrawHUD() {
+	/* time */
+	time_t t = std::time( nullptr );
+	std::ostringstream time;
+	time << std::put_time( std::localtime( &t ), XOR( "%H:%M:%S" ) );
 
+	/* format */
+	std::string text = tfm::format( XOR( "%s | %s    " ), logo, g_cl.m_user );
+
+	/* drawing */
+	render::FontSize_t size = render::Watermarke.size( text );
+
+	/* backround */
+	DrawList.FilledRect( m_width - 116, 10, 110, 20, color_t( 20, 15, 20 ) );
+	DrawList.FilledRect( m_width - 116, 10, 110, 2, color_t( 130, 125, 150 ) );
+	DrawList.Rect( m_width - 116, 10, 110, 20, color_t( 80, 80, 100, 140 ) );
+	DrawList.DrawString( { m_width - 56, 14 }, text, color_t( 255, 255, 255, 255 ), Fonts::Main, font_flags::centered_y || font_flags::drop_shadow );
 }
-
-
 
 void Client::KillFeed( ) {
 	static bool clear_notices = false;
@@ -267,7 +280,6 @@ void Client::OnPaint( ) {
 
 	g_notify.think( );
 
-	DrawHUD( );
 	KillFeed( );
 	//render::init();
 

@@ -162,7 +162,6 @@ void Window::InitTabs( ) {
 			this->m_WindowTabs[ i ].c_str( ), clr, Fonts::Main, font_flags::drop_shadow );
 	}
 }
-
 void Window::AddGroup( Groupbox* Groupbox )
 {
 	Groupbox->SetVisible( Groupbox->m_Tab == *this->m_Selected );

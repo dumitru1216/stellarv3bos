@@ -136,8 +136,9 @@ public:
 		Color name_team_color = Color(255, 255, 255);
 		bool enemies_dormant;
 		bool enemies_box;
-		Color enemies_box_color;
+		Color enemies_box_color = Color( 255, 255, 255 );
 		float hue_box = 100.f;
+		float hue_health = 100.f;
 		bool team_box;
 		Color team_box_color = Color(255, 255, 255);
 		bool enemies_skeleton;

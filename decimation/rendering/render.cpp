@@ -14,7 +14,7 @@ void render::init( ) {
 	esp = Font( XOR( "Lucida Console" ), 11, FW_NORMAL, FONTFLAG_DROPSHADOW );
 	pixel = Font( XOR( "Lucida Console" ), 8, FW_NORMAL, FONTFLAG_OUTLINE );
 	console = Font( XOR( "Lucida Console" ), 10, FW_DONTCARE, FONTFLAG_DROPSHADOW );
-	Watermarke = Font(XOR("Tahoma"), 12, FW_DONTCARE, FONTFLAG_DROPSHADOW);
+	Watermarke = Font(XOR("Verdana"), 7, 100, FONTFLAG_DROPSHADOW);
 	hud = Font( XOR( "Lucida Console" ), 12, FW_NORMAL, FONTFLAG_DROPSHADOW );
 	cs = Font( XOR( "Counter-Strike" ), 28, FW_MEDIUM, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW );
 	indicator = Font( XOR( "Tahoma" ), 13, FW_BOLD, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW );

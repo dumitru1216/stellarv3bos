@@ -32,6 +32,7 @@ private:
 	/* tab thing */
 	void InitTabs( );
 	void InitPosition( );
+
 	bool m_SetSwitch;
 
 	/* other form */

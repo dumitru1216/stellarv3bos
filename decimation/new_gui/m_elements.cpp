@@ -101,7 +101,7 @@ void GradientVertical2( float x, float y, float w, float h, Color c_a, Color c_b
 {
 	GradientVerticalPrototype2( { x, y }, { w, h }, c_a, c_b );
 }
-void GradientHorizontal2( float x, float y, float w, float h, Color c_a, Color c_b )
+void Gui::ExternalRendering::GradientHorizontal2( float x, float y, float w, float h, Color c_a, Color c_b )
 {
 	GradientHorizontalPrototype2( { x, y }, { w, h }, c_a, c_b );
 }
@@ -228,6 +228,7 @@ vec2_t window_position = vec2_t( 0, 0 );
 
 /* install ui */
 void Gui::Details::Install( ) {
+	/* pool */
 	m_Input.PollInput( );
 
 	/* menu open related */
@@ -328,15 +329,23 @@ void Gui::Details::Install( ) {
 		auto m_visuals_players = new Groupbox( "Players", 12, 19, 45, 208, 270, 2 );
 		{
 			m_Window->AddGroup( m_visuals_players );
+			m_visuals_players->AddElement( new Checkbox( "dormant esp", &g_loser.player_esp.enemies_dormant ) );
 			m_visuals_players->AddElement( new Checkbox( "bounding box", &g_loser.player_esp.enemies_box ) );
-			m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.enemies_box_color, &g_loser.player_esp.hue_box ) );\
+			m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.enemies_box_color, &g_loser.player_esp.hue_box ) );
 			if ( g_loser.player_esp.enemies_box ) {
 				m_visuals_players->AddElement( new Checkbox( "box outline", &g_loser.player_esp.box_outline ) );
+			}
+			m_visuals_players->AddElement( new Checkbox( "healthbar", &g_loser.player_esp.enemies_health ) );
+			if ( g_loser.player_esp.enemies_health ) {
+				m_visuals_players->AddElement( new Checkbox( "healthbar color override", &g_loser.player_esp.enemies_health_override ) );
+				if ( g_loser.player_esp.enemies_health_override ) {
+					m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.enemies_health_color, &g_loser.player_esp.hue_health ) );
+				}
 			}
 		} delete m_visuals_players;
 
 		auto m_visuals_chams = new Groupbox( "Chams", 10, 250, 45, 208, 95, 2 );
-		{
+		{ 
 			m_Window->AddGroup( m_visuals_chams );
 
 		} delete m_visuals_chams;
@@ -344,6 +353,15 @@ void Gui::Details::Install( ) {
 		auto m_visuals_world = new Groupbox( "World", 11, 250, 175, 208, 140, 2 );
 		{
 			m_Window->AddGroup( m_visuals_world );
+
+			/* night mode */
+			auto m_world = new Multi( "world modulation" );
+			m_world->AddItem( "nightmode", &g_loser.player_esp.world[ 0 ] );
+			m_world->AddItem( "fullbright", &g_loser.player_esp.world[ 1 ] );
+			m_visuals_world->AddElement( m_world );
+			if ( g_loser.player_esp.world[ 0 ] ) {
+				m_visuals_world->AddElement( new Slider( "darkness", &g_loser.player_esp.world_night_darkness, 0, 100, "%" ) );
+			}
 
 		} delete m_visuals_world;
 

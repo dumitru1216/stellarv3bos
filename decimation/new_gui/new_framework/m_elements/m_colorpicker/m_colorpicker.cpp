@@ -264,7 +264,7 @@ void ColorPicker::Draw( )
 	DrawList.FilledRect( m_Pos.x + 9, m_Pos.y + 7, 6, 4, color_t( 255, 255, 255 ) );
 	DrawList.FilledRect( m_Pos.x + 2, m_Pos.y + 2, 6, 4, color_t( 255, 255, 255 ) );
 
-	Gui::m_External.FilledRect2( m_Pos.x + 2, m_Pos.y + 2, 13, 9, *m_Select );
+    Gui::m_External.FilledRect2( m_Pos.x + 2, m_Pos.y + 2, 13, 9, *m_Select );
 	DrawList.Rect( m_Pos.x, m_Pos.y, 16, 12, color_t( 130, 125, 150 ) );
 
 	if ( m_Focused )

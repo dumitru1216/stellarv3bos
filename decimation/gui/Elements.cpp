@@ -572,15 +572,9 @@ void Menu::Visuals() {
 			style->WindowPadding = ImVec2(4, 4);
 			ImGui::CustomSpacing(9.f);
 
-			InsertSlider(XOR("Box horizontal"), g_loser.player_esp.box_horizontal, 0.f, 100.f, "%.2f");
-			InsertSlider(XOR("Box vertical"), g_loser.player_esp.box_vertical, 0.f, 100.f, "%.2f");
-
-			InsertCheckbox(XOR("Box outline"), g_loser.player_esp.box_outline);
 
 			InsertCheckbox(XOR("Name"), g_loser.player_esp.name);
 			ColorPicker(XOR("Name color"), &g_loser.player_esp.name_color, true);
-
-			InsertCheckbox(XOR("Dormant"), g_loser.player_esp.enemies_dormant);
 
 
 			InsertCheckbox(XOR("Offscreen"), g_loser.player_esp.enemies_offscreen);
@@ -754,20 +748,11 @@ void Menu::Visuals() {
 			InsertCheckbox(XOR("Grenade prediction"), g_loser.player_esp.grenade_prediction);
 			ColorPicker(XOR("Grenade prediction color"), &g_loser.player_esp.grenade_prediction_color1);
 
-			std::vector<const char*> World = {
-			    XOR("Night mode"),
-			    XOR("Fullbright")
-			};
 			std::vector<const char*> beam = {
 
 			  XOR("Beam"), XOR("Line")
 
 			};
-			InsertMultiCombo(XOR("Brightness adjustements"), g_loser.player_esp.world, World, 2);
-
-			if (g_loser.player_esp.world[0]) {
-				InsertSlider(XOR("Night mode darkness"), g_loser.player_esp.world_night_darkness, 0.f, 100.f, XOR("%.0f%%"));
-			}
 
 			InsertSlider(XOR("Prop opacity"), g_loser.player_esp.world_prop_opacity, 0.f, 100.f, XOR("%.0f%%"));
 

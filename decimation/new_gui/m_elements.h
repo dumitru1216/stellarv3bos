@@ -11,6 +11,7 @@ namespace Gui {
 
 	namespace External
 	{
+
 		struct EDrawRect
 		{
 			EDrawRect( float posX, float posY, float m_Width, float h, color_t m_color_t )
@@ -233,6 +234,7 @@ namespace Gui {
 
 		void Install( );
 		void FilledRect2( float x, float y, float w, float h, Color c );
+		void GradientHorizontal2( float x, float y, float w, float h, Color c_a, Color c_b );
 
 		std::vector< External::EDrawText > TextDraw;
 
