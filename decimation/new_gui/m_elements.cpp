@@ -9,6 +9,7 @@
 #include "new_framework/m_elements/m_combo/m_combo.h"
 #include "new_framework/m_elements/m_multi/m_multi.h"
 #include "new_framework/m_elements/m_slider/m_slider.h"
+#include "new_framework/m_elements/m_binds/m_binds.h"
 
 /* gui externals related */
 Gui::Details Gui::m_Details;
@@ -224,6 +225,19 @@ std::vector<std::string> aimbot_target_selection = { "lowest distance", "nearest
 std::vector<std::string> aimbot_prefered_hitbox = { "head", "body", "stomach" };
 std::vector<std::string> aimbot_automatic_stop = { "lowest damage", "fast", "enemy visible" };
 std::vector<std::string> aimbot_automatic_scope = { "disabled", "always autoscope", "low accuracy" };
+std::vector<std::string> antiaim_fakelag_mode = { "factor", "random ticks", "adaptive", "stepping" };
+std::vector<std::string> aimbot_exploits = { "disabled", "double tap", "hide shots" };
+
+/* antiaim */
+std::vector<std::string> antiaim_pitch = { "disabled", "emotion", "up", "nospread", "ideal pitch" };
+std::vector<std::string> antiaim_static_angle = { "disabled", "low crosshair", "low distance" };
+std::vector<std::string> antiaim_mode = { "disabled", "automatic direction", "offset based" };
+
+/* visuals strings */
+std::vector<std::string> visuals_weapon_mode = { "text", "icon", "text & icon" };
+std::vector<std::string> visuals_chams = { "enemy", "local" };
+std::vector<std::string> visuals_chams_material = { "csgo model", "default", "flat", "armsrace", "glow", "glass", "crystal" };
+
 vec2_t window_position = vec2_t( 0, 0 );
 
 /* install ui */
@@ -249,10 +263,6 @@ void Gui::Details::Install( ) {
 		{
 			m_Window->AddGroup( rage_main );
 			rage_main->AddElement( new Checkbox( "enable ragebot", &g_loser.rage.rage_aimbot_enabled ) );
-			rage_main->AddElement( new Checkbox( "limit fov ( semirage )", &g_loser.rage.rage_aimbot_limit_fov ) );
-			if ( g_loser.rage.rage_aimbot_limit_fov ) {
-				rage_main->AddElement( new Slider( "limit fov ammount", &g_loser.rage.rage_aimbot_limit_fov_amount, 0, 10, "%" ) );
-			}
 			rage_main->AddElement( new Combo( "target selection", &g_loser.rage.rage_aimbot_target_selection, aimbot_target_selection ) );
 			rage_main->AddElement( new Checkbox( "silent aim", &g_loser.rage.rage_aimbot_silent_aim ) );
 			rage_main->AddElement( new Checkbox( "automatic fire", &g_loser.rage.rage_aimbot_autofire ) );
@@ -292,6 +302,13 @@ void Gui::Details::Install( ) {
 
 			rage_accuracy->AddElement( new Checkbox( "ignore legs when moving", &g_loser.rage.rage_aimbot_ignore_limbs ) );
 			rage_accuracy->AddElement( new Checkbox( "prefer safepoint", &g_loser.rage.rage_aimbot_prefer_safepoint ) );
+
+			rage_accuracy->AddElement( new Combo( "exploit selection", &g_loser.rage.rage_exploit_type, aimbot_exploits ) );
+			if ( g_loser.rage.rage_exploit_type > 0 ) {
+				rage_accuracy->AddElement( new Checkbox( "prepare exploit", &g_loser.rage.exploit_xx ) );
+				rage_accuracy->AddElement( new Bind( &g_loser.rage.rage_exploit_key, &g_loser.rage.rage_exploit_key_style ) );
+			}
+
 			/* initialize scrollbars */
 			rage_accuracy->InitScroll( );
 		} delete rage_accuracy;
@@ -325,16 +342,58 @@ void Gui::Details::Install( ) {
 			rage_selection->InitScroll( );
 		} delete rage_selection;
 
+		/* antiaim tab */
+		auto m_antiaim_m = new Groupbox( "antiaim main", 3, 19, 45, 208, 270, 1 );
+		{
+			m_Window->AddGroup( m_antiaim_m );
+			m_antiaim_m->AddElement( new Checkbox( "enable antiaim", &g_loser.rage.rage_aa_enabled ) );
+			m_antiaim_m->AddElement( new Combo( "antiaim mode", &g_loser.rage.rage_aa_yaw, antiaim_mode ) );
+			m_antiaim_m->AddElement( new Combo( "pitch", &g_loser.rage.rage_aa_pitch, antiaim_pitch ) );
+			m_antiaim_m->AddElement( new Combo( "prefered angle", &g_loser.rage.rage_aa_yaw_base, antiaim_static_angle ) );
+
+		} delete m_antiaim_m;
+
+		auto m_antiaim_o = new Groupbox( "other", 4, 250, 45, 208, 95, 1 );
+		{
+			m_Window->AddGroup( m_antiaim_o );
+
+		} delete m_antiaim_o;
+
+		auto m_antiaim_fakelag = new Groupbox( "fakelag", 5, 250, 175, 208, 140, 1 );
+		{
+			m_Window->AddGroup( m_antiaim_fakelag );
+			m_antiaim_fakelag->AddElement( new Checkbox( "enable fakelag", &g_loser.rage.rage_fakelag_enabled ) );
+			if ( g_loser.rage.rage_fakelag_enabled ) {
+				/* fakelag activation mode */
+				auto m_fakelag_activation = new Multi( "fakelag activation" );
+				m_fakelag_activation->AddItem( "standing", &g_loser.rage.fakelag[ 0 ] );
+				m_fakelag_activation->AddItem( "moving", &g_loser.rage.fakelag[ 1 ] );
+				m_fakelag_activation->AddItem( "in air", &g_loser.rage.fakelag[ 2 ] );
+				m_fakelag_activation->AddItem( "inaccurate fix", &g_loser.rage.fakelag[ 3 ] );
+				m_antiaim_fakelag->AddElement( m_fakelag_activation );
+
+				m_antiaim_fakelag->AddElement( new Slider( "fakelag ticks", &g_loser.rage.rage_fakelag_limit, 0, 16, "%" ) );
+				m_antiaim_fakelag->AddElement( new Combo( "fakelag mode", &g_loser.rage.rage_fakelag_type, antiaim_fakelag_mode ) );
+			}
+
+			/* initialize scroll */
+			m_antiaim_fakelag->InitScroll( );
+		} delete m_antiaim_fakelag;
+
 		/* visuals tab */
-		auto m_visuals_players = new Groupbox( "Players", 12, 19, 45, 208, 270, 2 );
+		auto m_visuals_players = new Groupbox( "players", 6, 19, 45, 208, 270, 2 );
 		{
 			m_Window->AddGroup( m_visuals_players );
 			m_visuals_players->AddElement( new Checkbox( "dormant esp", &g_loser.player_esp.enemies_dormant ) );
+			
+			/* bounding box */
 			m_visuals_players->AddElement( new Checkbox( "bounding box", &g_loser.player_esp.enemies_box ) );
-			m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.enemies_box_color, &g_loser.player_esp.hue_box ) );
 			if ( g_loser.player_esp.enemies_box ) {
+				m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.enemies_box_color, &g_loser.player_esp.hue_box ) );
 				m_visuals_players->AddElement( new Checkbox( "box outline", &g_loser.player_esp.box_outline ) );
 			}
+
+			/* healthbar */
 			m_visuals_players->AddElement( new Checkbox( "healthbar", &g_loser.player_esp.enemies_health ) );
 			if ( g_loser.player_esp.enemies_health ) {
 				m_visuals_players->AddElement( new Checkbox( "healthbar color override", &g_loser.player_esp.enemies_health_override ) );
@@ -342,15 +401,59 @@ void Gui::Details::Install( ) {
 					m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.enemies_health_color, &g_loser.player_esp.hue_health ) );
 				}
 			}
+
+			/* name esp */
+			m_visuals_players->AddElement( new Checkbox( "name", &g_loser.player_esp.name ) );
+			if ( g_loser.player_esp.name ) {
+				m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.name_color, &g_loser.player_esp.hue_name ) );
+			}
+			
+			/* weapon esp */
+			m_visuals_players->AddElement( new Checkbox( "weapon", &g_loser.player_esp.enemies_weapon ) );
+			if ( g_loser.player_esp.enemies_weapon ) {
+				m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.enemies_weapon_color, &g_loser.player_esp.hue_weapon ) );
+				m_visuals_players->AddElement( new Combo( "weapon type", &g_loser.player_esp.enemies_weapon_type, visuals_weapon_mode ) );
+			}
+
+			/* ammo esp */
+			m_visuals_players->AddElement( new Checkbox( "ammo", &g_loser.player_esp.enemies_ammo ) );
+			if ( g_loser.player_esp.enemies_ammo ) {
+				m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.enemies_ammo_color, &g_loser.player_esp.hue_ammo ) );
+			}
+
+			/* flags */
+			auto m_flags = new Multi( "flags" );
+			m_flags->AddItem( "money", &g_loser.player_esp.enemies_flags[ 0 ] );
+			m_flags->AddItem( "armor", &g_loser.player_esp.enemies_flags[ 1 ] );
+			m_flags->AddItem( "scoped", &g_loser.player_esp.enemies_flags[ 2 ] );
+			m_flags->AddItem( "bomb", &g_loser.player_esp.enemies_flags[ 3 ] );
+			m_visuals_players->AddElement( m_flags );
+
+			/* initialize scrollbar*/
+			m_visuals_players->InitScroll( );
 		} delete m_visuals_players;
 
-		auto m_visuals_chams = new Groupbox( "Chams", 10, 250, 45, 208, 95, 2 );
+		auto m_visuals_chams = new Groupbox( "chams", 7, 250, 45, 208, 95, 2 );
 		{ 
 			m_Window->AddGroup( m_visuals_chams );
+			m_visuals_chams->AddElement( new Combo( "entity", &g_loser.player_esp.group_chams, visuals_chams ) );
+			if ( g_loser.player_esp.group_chams == 0 ) {
+				/* entity */
+			}
+			else if ( g_loser.player_esp.group_chams == 1 ) {
+				/* local */
+				m_visuals_chams->AddElement( new Checkbox( "desync chams", &g_loser.player_esp.desync_chams ) );
+				if ( g_loser.player_esp.desync_chams ) {
+					m_visuals_chams->AddElement( new ColorPicker( &g_loser.player_esp.desync_chams_color, &g_loser.player_esp.hue_desync, true ) );
+					m_visuals_chams->AddElement( new Combo( "desync chams materials", &g_loser.player_esp.desync_chams_material, visuals_chams_material ) );
+				}
+			}
 
+			/* initialize scrollbar */
+			m_visuals_chams->InitScroll( );
 		} delete m_visuals_chams;
 
-		auto m_visuals_world = new Groupbox( "World", 11, 250, 175, 208, 140, 2 );
+		auto m_visuals_world = new Groupbox( "world", 8, 250, 175, 208, 140, 2 );
 		{
 			m_Window->AddGroup( m_visuals_world );
 
@@ -367,28 +470,35 @@ void Gui::Details::Install( ) {
 
 
 		/* settings tab */
-		auto conf = new Groupbox( "Misc", 12, 19, 45, 208, 270, 3 );
+		auto conf = new Groupbox( "misc", 9, 19, 45, 208, 270, 3 );
 		{
 			m_Window->AddGroup( conf );
+			conf->AddElement( new Checkbox( "automatic bhop", &g_loser.miscellaneous.bhop ) );
+			conf->AddElement( new Checkbox( "automatic strafe", &g_loser.miscellaneous.auto_strafe ) );
+			if ( g_loser.miscellaneous.auto_strafe ) {
+				conf->AddElement( new Checkbox( "directional strafe", &g_loser.miscellaneous.wasd_strafe ) );
+			}
+			conf->AddElement( new Checkbox( "thirdperson", &g_loser.miscellaneous.thirdperson ) );
+			if ( g_loser.miscellaneous.thirdperson ) {
+				conf->AddElement( new Bind( &g_loser.miscellaneous.thirdperson_key, &g_loser.miscellaneous.thirdperson_key_style ) );
+				conf->AddElement( new Slider( "thirdperson distance", &g_loser.miscellaneous.thirdperson_distance, 50, 150, "%" ) );
+			}
 
 		} delete conf;
 
-		auto conf_scripts = new Groupbox( "Other", 10, 250, 45, 208, 95, 3 );
+		auto conf_scripts = new Groupbox( "other", 10, 250, 45, 208, 95, 3 );
 		{
 			m_Window->AddGroup( conf_scripts );
 
 		} delete conf_scripts;
 
-		auto conf_func = new Groupbox( "Configs", 11, 250, 175, 208, 140, 3 );
+		auto conf_func = new Groupbox( "configs", 11, 250, 175, 208, 140, 3 );
 		{
 			m_Window->AddGroup( conf_func );
 			conf_func->AddElement( new Combo( "configs", &current_preset, presets ) );
 			conf_func->AddElement( new Button( "save config", [ ]( ) { Gui::m_Cfg.SaveConfig( ); } ) );
 			conf_func->AddElement( new Button( "load config", [ ]( ) { Gui::m_Cfg.LoadConfig( ); } ) );
 		} delete conf_func;
-
-
-
 	} delete m_Window;
 	m_External.Install( );
 }

@@ -68,7 +68,7 @@ bool CSGO::init( ) {
 	m_networkstringtable = interfaces.get< INetworkStringTableContainer* >( HASH( "VEngineClientStringTable" ) );
 	m_sound = interfaces.get< IEngineSound* >( HASH( "IEngineSoundClient" ) );
 	m_player_vtable = util::GetVirtualTablePointer( XOR( "client.dll" ), XOR( "C_CSPlayer" ) );
-	m_net = reinterpret_cast<INetChannel*>(util::GetVirtualTablePointer(XOR("engine.dll"), XOR("CNetChan")));
+	m_net = reinterpret_cast< INetChannel* >( util::GetVirtualTablePointer( XOR( "engine.dll" ), XOR( "CNetChan" ) ) );
 
 	// convars.
 	clear = m_cvar->FindVar( HASH( "clear" ) );
@@ -158,22 +158,21 @@ bool CSGO::init( ) {
 		return nullptr;
 	};
 
-	m_move_helper = **reinterpret_cast<IMoveHelper***>(FindPatternIDA(GetModuleHandleA("client.dll"),"8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01") + 2);
-	m_cl = **reinterpret_cast<CClientState***>(FindPatternIDA(GetModuleHandleA("engine.dll"), "A1 ? ? ? ? 8B 80 ? ? ? ? C3") + 1);
-	m_game               = pattern::find( m_engine_dll, XOR( "A1 ? ? ? ? B9 ? ? ? ? FF 75 08 FF 50 34" ) ).add( 1 ).get< CGame* >( );
-	m_render             = pattern::find( m_engine_dll, XOR( "A1 ? ? ? ? B9 ? ? ? ? FF 75 0C FF 75 08 FF 50 0C" ) ).add( 1 ).get< CRender* >( );
-	m_shadow_mgr = pattern::find( m_client_dll, XOR( "A1 ? ? ? ? FF 90 ? ? ? ? 6A 00" ) ).add( 1 ).get( ).as< IClientShadowMgr* >( );
+	m_move_helper = **reinterpret_cast< IMoveHelper*** >( FindPatternIDA( GetModuleHandleA( "client.dll" ), "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01" ) + 2 );
+	m_cl = **reinterpret_cast< CClientState*** >( FindPatternIDA( GetModuleHandleA( "engine.dll" ), "A1 ? ? ? ? 8B 80 ? ? ? ? C3" ) + 1 );
+
+	m_shadow_mgr = pattern::find( m_client_dll, XOR( "A1 ? ? ? ? FF 90 ? ? ? ? 6A 00 6A 00" ) ).add( 1 ).get( ).as< IClientShadowMgr* >( );
 	m_view_render = pattern::find( m_client_dll, XOR( "8B 0D ? ? ? ? 57 8B 01 FF 50 14 E8 ? ? ? ? 5F" ) ).add( 2 ).get< CViewRender* >( 2 );
-	 //m_entity_listeners   = pattern::find( m_client_dll, XOR( "B9 ? ? ? ? E8 ? ? ? ? 5E 5D C2 04" ) ).add( 0x1 ).get< IClientEntityListener** >( 2 );
-	m_hud                = pattern::find( m_client_dll, XOR( "B9 ? ? ? ? 0F 94 C0 0F B6 C0 50 68" ) ).add( 0x1 ).get( ).as< CHud* >( );
+	// m_entity_listeners   = pattern::find( m_client_dll, XOR( "B9 ? ? ? ? E8 ? ? ? ? 5E 5D C2 04" ) ).add( 0x1 ).get< IClientEntityListener** >( 2 );
+	//m_hud                = pattern::find( m_client_dll, XOR( "B9 ? ? ? ? 0F 94 C0 0F B6 C0 50 68" ) ).add( 0x1 ).get( ).as< CHud* >( );
 	m_gamerules = pattern::find( m_client_dll, XOR( "A1 ? ? ? ? 85 C0 0F 84 ? ? ? ? 80 B8 ? ? ? ? ? 74 7A" ) ).add( 0x1 ).get< C_CSGameRules* >( );
 	m_beams = pattern::find( m_client_dll, XOR( "8D 43 FC B9 ? ? ? ? 50 A1" ) ).add( 0x4 ).get< IViewRenderBeams* >( );
 	m_mem_alloc = PE::GetExport( m_tier0_dll, HASH( "g_pMemAlloc" ) ).get< IMemAlloc* >( );
-	GetGlowObjectManager = pattern::find( m_client_dll, XOR( "0F 11 05 ? ? ? ? 83 C8 01" ) ).add(0x3).get().as< GetGlowObjectManager_t >( );
+	//GetGlowObjectManager = pattern::find( m_client_dll, XOR( "0F 11 05 ? ? ? ? 83 C8 01" ) ).add(0x3).get().as< GetGlowObjectManager_t >( );
 	m_glow = *pattern::find( m_client_dll, XOR( "0F 11 05 ? ? ? ? 83 C8 01" ) ).add( 0x3 ).as< CGlowObjectManager** >( );
 
 	// classes by offset from virtual.
-	m_globals = util::get_method( m_client, CHLClient::INIT ).add( 0x1f ).get< CGlobalVarsBase* >( 2 );
+	m_globals = util::get_method( m_client, CHLClient::INIT ).add( 0x1F ).get< CGlobalVarsBase* >( 2 );
 	m_client_mode = util::get_method( m_client, CHLClient::HUDPROCESSINPUT ).add( 0x5 ).get< IClientMode* >( 2 );
 	m_input = util::get_method( m_client, CHLClient::INACTIVATEMOUSE ).at< CInput* >( 0x1 );
 
@@ -181,13 +180,13 @@ bool CSGO::init( ) {
 
 	// functions.
 	MD5_PseudoRandom = pattern::find( m_client_dll, XOR( "55 8B EC 83 E4 F8 83 EC 70 6A" ) ).as< MD5_PseudoRandom_t >( );
-	SetAbsAngles = pattern::find( m_client_dll, XOR( "55 8B EC 83 E4 F8 83 EC 64 53 56 57 8B F1" ) );
+	SetAbsAngles = pattern::find( m_client_dll, XOR( "55 8B EC 83 E4 F8 83 EC 64 53 56 57 8B F1 E8 ?" ) );
 	InvalidateBoneCache = pattern::find( m_client_dll, XOR( "80 3D ? ? ? ? ? 74 16 A1 ? ? ? ? 48 C7 81" ) );
 	DisablePostProcess = pattern::find( m_client_dll, XOR( "80 3D ? ? ? ? ? 53 56 57 0F 85" ) ).add( 0x2 );
 	ReportHit = pattern::find( m_client_dll, XOR( "55 8B EC 8B 55 08 83 EC 1C F6 42 1C 01" ) ).as< uintptr_t >( );
-	CL_Move = pattern::find(m_engine_dll, XOR("55 8B EC 81 EC ? ? ? ? 53 56 57 8B 3D ? ? ? ? 8A")).as<uintptr_t>();
+	CL_Move = pattern::find( m_engine_dll, XOR( "55 8B EC 81 EC ? ? ? ? 53 56 57 8B 3D ? ? ? ? 8A" ) ).as<uintptr_t>( );
 	LockStudioHdr = pattern::find( m_client_dll, XOR( "55 8B EC 51 53 8B D9 56 57 8D B3" ) );
-	SetAbsOrigin = pattern::find( m_client_dll, XOR( "55 8B EC 83 E4 F8 51 53 56 57 8B F1 E8 ? ? ? ? 8B 7D" ) );
+	SetAbsOrigin = pattern::find( m_client_dll, XOR( "55 8B EC 83 E4 F8 51 53 56 57 8B F1 E8 ? ?" ) );
 	IsBreakableEntity = pattern::find( m_client_dll, XOR( "55 8B EC 51 56 8B F1 85 F6 74 68" ) ).as< IsBreakableEntity_t >( );
 	SetAbsVelocity = pattern::find( m_client_dll, XOR( "55 8B EC 83 E4 F8 83 EC 0C 53 56 57 8B 7D 08 8B F1" ) );
 	AngleMatrix = pattern::find( m_client_dll, XOR( "E8 ? ? ? ? 8B 07 89 46 0C" ) ).rel32( 0x1 ).as< AngleMatrix_t >( );
@@ -197,10 +196,6 @@ bool CSGO::init( ) {
 	ServerRankRevealAll = pattern::find( m_client_dll, XOR( "55 8B EC 8B 0D ? ? ? ? 68" ) ).as< ServerRankRevealAll_t >( );
 	HasC4 = pattern::find( m_client_dll, XOR( "56 8B F1 85 F6 74 31" ) );
 	InvalidatePhysicsRecursive = pattern::find( m_client_dll, XOR( "55 8B EC 83 E4 F8 83 EC 0C 53 8B 5D 08 8B C3 56" ) );
-	//IsReady                         = pattern::find( m_client_dll, XOR( "E8 ? ? ? ? 59 C2 08 00 51 E8" ) ).rel32( 0x1 ).as< IsReady_t >( );
-	//ShowAndUpdateSelection          = pattern::find( m_client_dll, XOR( "E8 ? ? ? ? A1 ? ? ? ? F3 0F 10 40 ? C6 83" ) ).rel32( 0x1 ).as< ShowAndUpdateSelection_t >( );
-	//GetEconItemView                 = pattern::find( m_client_dll, XOR( "8B 81 ? ? ? ? 81 C1 ? ? ? ? FF 50 04 83 C0 40 C3" ) ).as< GetEconItemView_t >( );
-	//GetStaticData                   = pattern::find( m_client_dll, XOR( "55 8B EC 51 56 57 8B F1 E8 ? ? ? ? 0F B7 8E" ) ).as< GetStaticData_t >( );
 	TEFireBullets = util::GetVirtualTablePointer( XOR( "client.dll" ), XOR( "C_TEFireBullets" ) );
 	SmokeCount = pattern::find( m_client_dll, XOR( "A3 ? ? ? ? 57 8B CB" ) ).add( 0x1 ).to( );
 	BeamAlloc = pattern::find( m_client_dll, XOR( "E8 ? ? ? ? 8B F0 85 F6 74 7C" ) ).rel32< BeamAlloc_t >( 0x1 );
@@ -216,7 +211,6 @@ bool CSGO::init( ) {
 	studioHdr = pattern::find( m_client_dll, XOR( "8B 86 ? ? ? ? 89 44 24 10 85 C0" ) ).add( 2 ).to< size_t >( );
 	UTIL_TraceLine = pattern::find( m_client_dll, XOR( "55 8B EC 83 E4 F0 83 EC 7C 56 52" ) );
 	CTraceFilterSimple_vmt = UTIL_TraceLine.add( 0x3D ).to( );
-	//  CTraceFilterSkipTwoEntities_vmt = pattern::find( m_client_dll, XOR( "E8 ? ? ? ? F3 0F 10 84 24 ? ? ? ? 8D 84 24 ? ? ? ? F3 0F 58 44 24" ) ).rel32( 1 ).add( 0x59 ).to( );
 	LastBoneSetupTime = InvalidateBoneCache.add( 0x11 ).to< size_t >( );
 	MostRecentModelBoneCounter = InvalidateBoneCache.add( 0x1B ).to< size_t >( );
 

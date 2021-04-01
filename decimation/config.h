@@ -91,6 +91,7 @@ public:
 		float rage_aimbot_penetration_minimal_damage = 0.f;
 		float rage_aimbot_minimal_damage_override = 1.f;
 
+		bool exploit_xx;
 
 		int rage_exploit_key = 0;
 		int rage_exploit_key_style = 2;
@@ -137,8 +138,15 @@ public:
 		bool enemies_dormant;
 		bool enemies_box;
 		Color enemies_box_color = Color( 255, 255, 255 );
+
+		/* hue */
 		float hue_box = 100.f;
+		float hue_name = 100.f;
+		float hue_weapon = 100.f;
+		float hue_ammo = 100.f;
 		float hue_health = 100.f;
+		float hue_offscreen = 100.f;
+
 		bool team_box;
 		Color team_box_color = Color(255, 255, 255);
 		bool enemies_skeleton;
@@ -164,6 +172,12 @@ public:
 		float box_vertical = 100.f;
 		bool box_outline;
 		bool enemy_glow;
+
+		bool desync_chams;
+		Color desync_chams_color = Color( 255, 255, 255 );
+		int desync_chams_material;
+		float hue_desync;
+
 		Color enemy_glow_color = Color(255, 255, 255);
 		bool chams_enemies;
 		Color chams_enemies_color = Color(255, 255, 255);
@@ -220,6 +234,7 @@ public:
 		int thirdperson_key_style = 2;
 		int fakeduck_key = 0;
 		int fakeduck_key_style = 1;
+		bool thirdperson;
 		float thirdperson_distance = 100.f;
 		bool auto_strafe;
 		bool wasd_strafe;

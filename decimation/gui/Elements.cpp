@@ -314,18 +314,6 @@ void Menu::Ragebot() {
 			style->WindowPadding = ImVec2(4, 4);
 			ImGui::CustomSpacing(9.f);
 
-			std::vector<const char*> ex = {
-				XOR("None"), XOR("Double tap"), XOR("Hide shot")
-			};
-
-			InsertComboWithoutText(XOR("Exploits"), g_loser.rage.rage_exploit_type, ex);
-			if (g_loser.rage.rage_exploit_type > 0) {
-				ImGui::Spacing(); ImGui::NewLine(); ImGui::SameLine(42.f);
-				ImGui::Text(XOR("Exploit key"));
-				InsertKeyBindStyle(XOR("Exploit"), g_loser.rage.rage_exploit_key, g_loser.rage.rage_exploit_key_style);
-
-			}
-
 			ImGui::Spacing(); ImGui::NewLine(); ImGui::SameLine(42.f);
 			ImGui::Text(XOR("Force body-aim key"));
 			InsertKeyBindStyle(XOR("Force body-aim"), g_loser.rage.rage_aimbot_baim_key, g_loser.rage.rage_aimbot_baim_key_style)
@@ -350,22 +338,7 @@ void Menu::Anti_aimbot() {
 
 			InsertCheckbox(XOR("Enable"), g_loser.rage.rage_aa_enabled);
 
-			std::vector<const char*> pitch =
-			{
-				XOR("None"), XOR("Down"), XOR("Up"), XOR("Random"), XOR("Ideal")
-			};
 
-			InsertComboWithoutText(XOR("Pitch"), g_loser.rage.rage_aa_pitch, pitch);
-
-			std::vector<const char*> Static_angle =
-			{
-				XOR("None"), XOR("Away crosshair"), XOR("Away distance")
-			};
-
-			std::vector<const char*> Yaw =
-			{
-				XOR("None"), XOR("Direction"), XOR("Random")
-			};
 
 			std::vector<const char*> Direction =
 			{
@@ -377,8 +350,6 @@ void Menu::Anti_aimbot() {
 				XOR("None"), XOR("Offset"), XOR("Random")
 			};
 
-			InsertComboWithoutText(XOR("Static angle"), g_loser.rage.rage_aa_yaw_base, Static_angle);
-			InsertComboWithoutText(XOR("Yaw"), g_loser.rage.rage_aa_yaw, Yaw);
 
 			auto yaw = g_loser.rage.rage_aa_yaw;
 			// yaw types.
@@ -413,23 +384,6 @@ void Menu::Anti_aimbot() {
 			style->WindowPadding = ImVec2(4, 4);
 			ImGui::CustomSpacing(9.f);
 
-			InsertCheckbox(XOR("Enable"), g_loser.rage.rage_fakelag_enabled);
-
-			std::vector<const char*> fakelag_activation = {
-
-				XOR("Standing"), XOR("Moving"), XOR("In air"), XOR("Crouch")
-			};
-
-			std::vector<const char*> fakelag =
-			{
-				XOR("Max"), XOR("Break"), XOR("Random"), XOR("Break step")
-			};
-
-			InsertMultiCombo(XOR("Fake lag activation"), g_loser.rage.fakelag, fakelag_activation, 4);
-
-			InsertSlider(XOR("Fake lag limit"), g_loser.rage.rage_fakelag_limit, 2, 15, XOR("%.0f%%"));
-
-			InsertComboWithoutText(XOR("Fake lag mode"), g_loser.rage.rage_fakelag_type, fakelag);
 
 
 			style->ItemSpacing = ImVec2(0, 0);
@@ -573,39 +527,9 @@ void Menu::Visuals() {
 			ImGui::CustomSpacing(9.f);
 
 
-			InsertCheckbox(XOR("Name"), g_loser.player_esp.name);
-			ColorPicker(XOR("Name color"), &g_loser.player_esp.name_color, true);
-
-
 			InsertCheckbox(XOR("Offscreen"), g_loser.player_esp.enemies_offscreen);
 			ColorPicker(XOR("Offscreen color"), &g_loser.player_esp.enemies_offscreen_color, false);
 
-			InsertCheckbox(XOR("Health"), g_loser.player_esp.enemies_health);
-			InsertCheckbox(XOR("Health color override"), g_loser.player_esp.enemies_health_override);
-			ColorPicker(XOR("Health color"), &g_loser.player_esp.enemies_health_color, false);
-
-
-			std::vector<const char*> flags = {
-			 XOR("Money"),
-			 XOR("Armor"),
-			 XOR("Scoped"),
-	         XOR("Bomb")
-			};
-
-			InsertMultiCombo(XOR("Flags"), g_loser.player_esp.enemies_flags, flags, 4);
-
-			InsertCheckbox(XOR("Weapon"), g_loser.player_esp.enemies_weapon);
-			ColorPicker(XOR("Weapon color"), &g_loser.player_esp.enemies_weapon_color, false);
-
-			std::vector<const char*> xui =
-			{
-				XOR("Text"), XOR("Icons")
-			};
-
-			InsertComboWithoutText(XOR("Weapon type"), g_loser.player_esp.enemies_weapon_type, xui);
-
-			InsertCheckbox(XOR("Ammo"), g_loser.player_esp.enemies_ammo);
-			ColorPicker(XOR("Ammo color"), &g_loser.player_esp.enemies_ammo_color, false);
 
 			InsertCheckbox(XOR("Skeleton"), g_loser.player_esp.enemies_skeleton);
 			ColorPicker(XOR("Skeleton color"), &g_loser.player_esp.enemies_skeleton_color, false);
@@ -623,22 +547,6 @@ void Menu::Visuals() {
 			style->WindowPadding = ImVec2(4, 4);
 			ImGui::CustomSpacing(9.f);
 
-			std::vector<const char*> gg =
-			{
-			   XOR("Local"), XOR("Enemy"), XOR("Team")
-			};
-
-			std::vector<const char*> Materials = {
-		        XOR("None"),
-		        XOR("Default"),
-		        XOR("Flat"),
-		        XOR("Glow Armsrace"),
-		        XOR("Eso Glow"),
-		        XOR("Glass"),
-		        XOR("Crystal")
-			};
-
-			InsertComboWithoutText(XOR("Group"), g_loser.player_esp.group_chams, gg);
 
 			switch (g_loser.player_esp.group_chams) {
 			case 0:
@@ -647,9 +555,7 @@ void Menu::Visuals() {
 
 				InsertCheckbox(XOR("Chams"), g_loser.player_esp.chams_local_enable);
 				ColorPicker(XOR("Chams color"), &g_loser.player_esp.chams_local_color);
-				if (g_loser.player_esp.chams_local_enable) {
-					InsertComboWithoutText(XOR("Chams material"), g_loser.player_esp.chams_local_material, Materials);
-				}
+				
 
 				break;
 			case 1:
@@ -660,13 +566,13 @@ void Menu::Visuals() {
 				ColorPicker(XOR("Chams visible color"), &g_loser.player_esp.chams_enemies_color);
 
 				if (g_loser.player_esp.chams_enemies) {
-					InsertComboWithoutText(XOR("Chams visible material"), g_loser.player_esp.chams_enemies_material, Materials);
+				
 
 					InsertCheckbox(XOR("Chams invisible"), g_loser.player_esp.chams_enemies_invis);
 					ColorPicker(XOR("Chams invisible color"), &g_loser.player_esp.chams_enemies_invis_color);
 
 					if (g_loser.player_esp.chams_enemies_invis) {
-						InsertComboWithoutText(XOR("Chams invisible material"), g_loser.player_esp.chams_enemies_invis_material, Materials);
+					
 					}
 				}
 
@@ -682,13 +588,13 @@ void Menu::Visuals() {
 
 				if (g_loser.player_esp.chams_team)
 				{
-					InsertComboWithoutText(XOR("Chams visible material"), g_loser.player_esp.chams_team_material, Materials);
+				
 
 					InsertCheckbox(XOR("Chams invisible"), g_loser.player_esp.chams_team_invis);
 					ColorPicker(XOR("Chams invisible color"), &g_loser.player_esp.chams_team_invis_color);
 
 					if (g_loser.player_esp.chams_team_invis) {
-						InsertComboWithoutText(XOR("Chams invisible material"), g_loser.player_esp.chams_team_invis_material, Materials);
+						
 					}
 				}
 
@@ -755,11 +661,6 @@ void Menu::Visuals() {
 			};
 
 			InsertSlider(XOR("Prop opacity"), g_loser.player_esp.world_prop_opacity, 0.f, 100.f, XOR("%.0f%%"));
-
-			ImGui::Spacing(); ImGui::NewLine(); ImGui::SameLine(42.f);
-			ImGui::Text(XOR("Third person"));
-			InsertKeyBindStyle(XOR("Third person"), g_loser.miscellaneous.thirdperson_key, g_loser.miscellaneous.thirdperson_key_style);
-			InsertSlider(XOR("Third person distance"), g_loser.miscellaneous.thirdperson_distance, 0.f, 200.f, "%.2f");
 
 			InsertCheckbox(XOR("Bullet tracers"), g_loser.player_esp.bullet_beam);
 

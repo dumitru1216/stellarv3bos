@@ -1,5 +1,4 @@
 #include "../includes.h"
-
 Visuals g_visuals{ };;
 
 void Visuals::ModulateWorld( ) {
@@ -681,6 +680,7 @@ void Visuals::DrawItem( Weapon* item ) {
 	render::pixel.string( screen.x, screen.y - render::pixel.m_size.m_height - 1, col, ammo, render::ALIGN_CENTER );
 }
 
+
 void Visuals::OffScreen( Player* player, int alpha ) {
 	vec3_t view_origin, target_pos, delta;
 	vec2_t screen_pos, offscreen_pos;
@@ -776,49 +776,14 @@ void Visuals::OffScreen( Player* player, int alpha ) {
 		verts[ 0 ] = render::RotateVertex( offscreen_pos, verts[ 0 ], offscreen_rotation );
 		verts[ 1 ] = render::RotateVertex( offscreen_pos, verts[ 1 ], offscreen_rotation );
 		verts[ 2 ] = render::RotateVertex( offscreen_pos, verts[ 2 ], offscreen_rotation );
-		// verts_outline[ 0 ] = render::RotateVertex( offscreen_pos, verts_outline[ 0 ], offscreen_rotation );
-		// verts_outline[ 1 ] = render::RotateVertex( offscreen_pos, verts_outline[ 1 ], offscreen_rotation );
-		// verts_outline[ 2 ] = render::RotateVertex( offscreen_pos, verts_outline[ 2 ], offscreen_rotation );
-
-		// todo - dex; finish this, i want it.
-		// auto &damage_data = m_offscreen_damage[ player->index( ) ];
-		// 
-		// // the local player was damaged by another player recently.
-		// if( damage_data.m_time > 0.f ) {
-		//     // // only a small amount of time left, start fading into white again.
-		//     // if( damage_data.m_time < 1.f ) {
-		//     //     // calculate step needed to reach 255 in 1 second.
-		//     //     // float step = UINT8_MAX / ( 1000.f * g_csgo.m_globals->m_frametime );
-		//     //     float step = ( 1.f / g_csgo.m_globals->m_frametime ) / UINT8_MAX;
-		//     //     
-		//     //     // increment the new value for the color.
-		//     //     // if( damage_data.m_color_step < 255.f )
-		//     //         damage_data.m_color_step += step;
-		//     // 
-		//     //     math::clamp( damage_data.m_color_step, 0.f, 255.f );
-		//     // 
-		//     //     damage_data.m_color.g( ) = (uint8_t)damage_data.m_color_step;
-		//     //     damage_data.m_color.b( ) = (uint8_t)damage_data.m_color_step;
-		//     // }
-		//     // 
-		//     // g_cl.print( "%f %f %u %u %u\n", damage_data.m_time, damage_data.m_color_step, damage_data.m_color.r( ), damage_data.m_color.g( ), damage_data.m_color.b( ) );
-		//     
-		//     // decrement timer.
-		//     damage_data.m_time -= g_csgo.m_globals->m_frametime;
-		// }
-		// 
-		// else
-		//     damage_data.m_color = colors::white;
 
 		// render!
-		color = g_loser.player_esp.enemies_offscreen_color; // damage_data.m_color;
+		color = g_loser.player_esp.enemies_offscreen_color;
 		color.a( ) = ( alpha == 255 ) ? color.a( ) : alpha / 2;
 
 		g_csgo.m_surface->DrawSetColor( color );
 		g_csgo.m_surface->DrawTexturedPolygon( 3, verts );
 
-		//g_csgo.m_surface->DrawSetColor( colors::black );
-		//g_csgo.m_surface->DrawTexturedPolyLine( 3, verts_outline );
 	}
 }
 
@@ -1151,16 +1116,18 @@ void Visuals::DrawPlayer( Player* player ) {
 					clr.a( ) = alpha;
 					render::rect( box.x + 1, box.y + box.h + 3, bar, 2, clr );
 
-					// less then a 5th of the bullets left.
-					if( current <= ( int )std::round( max / 5 ) && !reload )
+					/* show bullets full weapon bar */
+					if ( current <= ( int )std::round( max - 1 ) && !reload ) {
 						render::pixel.string( box.x + bar, box.y + box.h, { 255, 255, 255, low_alpha }, std::to_string( current ), render::ALIGN_CENTER );
+					}
 				}
 
 				Color weapon_clr = enemy ? g_loser.player_esp.enemies_weapon_color : g_loser.player_esp.team_weapon_color;
 				bool weaponText = ( enemy && g_loser.player_esp.enemies_weapon_type == 0) || ( !enemy && g_loser.player_esp.team_weapon_type == 0 );
 				bool weaponIcon = ( enemy && g_loser.player_esp.enemies_weapon_type == 1 ) || ( !enemy && g_loser.player_esp.team_weapon_type == 1 );
+				bool weapon_both = ( enemy && g_loser.player_esp.enemies_weapon_type == 2 ) || ( !enemy && g_loser.player_esp.team_weapon_type == 2 );
 
-				// text.
+				/* weapon text and icon */
 				if( weaponText ) {
 					// construct std::string instance of localized weapon name.
 					std::string name{ weapon->GetLocalizedName( ) };
@@ -1170,8 +1137,6 @@ void Visuals::DrawPlayer( Player* player ) {
 
 					render::pixel.string( box.x + box.w / 2, box.y + box.h + offset, weapon_clr.OverrideAlpha( low_alpha ), name, render::ALIGN_CENTER );
 				}
-
-				// icons.
 				else if( weaponIcon ) {
 					// icons are super fat..
 					// move them back up.
@@ -1179,6 +1144,18 @@ void Visuals::DrawPlayer( Player* player ) {
 
 					std::string icon = tfm::format( XOR( "%c" ), m_weapon_icons[ weapon->m_iItemDefinitionIndex( ) ] );
 					render::cs.string( box.x + box.w / 2, box.y + box.h + offset, weapon_clr.OverrideAlpha( low_alpha ), icon, render::ALIGN_CENTER );
+				}
+				else if ( weapon_both ) {
+					// construct std::string instance of localized weapon name.
+					std::string name{ weapon->GetLocalizedName( ) };
+
+					// smallfonts needs upper case.
+					std::transform( name.begin( ), name.end( ), name.begin( ), ::toupper );
+					render::pixel.string( box.x + box.w / 2, box.y + box.h + offset, weapon_clr.OverrideAlpha( low_alpha ), name, render::ALIGN_CENTER );
+
+					std::string icon = tfm::format( XOR( "%c" ), m_weapon_icons[ weapon->m_iItemDefinitionIndex( ) ] );
+					render::cs.string( box.x + box.w / 2, box.y + box.h + 15, weapon_clr.OverrideAlpha( low_alpha ), icon, render::ALIGN_CENTER );
+
 				}
 			}
 		}
@@ -1263,11 +1240,6 @@ void Visuals::DrawPlantedC4( Entity* ent ) {
 
 	}
 
-	// calculate bomb damage.
-	// references:
-	//     https://github.com/VSES/SourceEngine2007/blob/43a5c90a5ada1e69ca044595383be67f40b33c61/se2007/game/shared/cstrike/weapon_c4.cpp#L271
-	//     https://github.com/VSES/SourceEngine2007/blob/43a5c90a5ada1e69ca044595383be67f40b33c61/se2007/game/shared/cstrike/weapon_c4.cpp#L437
-	//     https://github.com/ValveSoftware/source-sdk-2013/blob/master/sp/src/game/shared/sdk/sdk_gamerules.cpp#L173
 	{
 		// get our distance to the bomb.
 		// todo - alpha; is dst right? might need to reverse CBasePlayer::BodyTarget...

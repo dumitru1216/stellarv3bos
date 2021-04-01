@@ -25,7 +25,5 @@ void Hooks::PlaySound( const char* name ) {
 void Hooks::OnScreenSizeChanged( int oldwidth, int oldheight ) {
 	g_hooks.m_surface.GetOldMethod< OnScreenSizeChanged_t >( ISurface::ONSCREENSIZECHANGED )( this, oldwidth, oldheight );
 
-	//render::init( );
-
 	g_visuals.ModulateWorld( );
 }

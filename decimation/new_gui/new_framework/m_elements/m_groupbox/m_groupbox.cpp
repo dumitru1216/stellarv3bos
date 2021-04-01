@@ -9,6 +9,7 @@
 #include "../m_combo/m_combo.h"
 #include "../m_multi/m_multi.h"
 #include "../m_slider/m_slider.h"
+#include "../m_binds/m_binds.h"
 
 static int m_Slide[ Gui::m_Maximum ];
 static bool m_SlideMore[ Gui::m_Maximum ];
@@ -257,7 +258,6 @@ void Groupbox::AddElement( ColorPicker* m_Color )
 	delete m_Color;
 }
 
-/*
 void Groupbox::AddElement( Bind* m_Bind )
 {
 	if ( GetVisible( ) )
@@ -288,7 +288,6 @@ void Groupbox::AddElement( Bind* m_Bind )
 
 	delete m_Bind;
 }
-*/
 
 void Groupbox::AddElement( TextInput* m_Input )
 {

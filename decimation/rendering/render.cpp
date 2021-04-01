@@ -11,8 +11,8 @@ namespace render {
 }
 
 void render::init( ) {
-	esp = Font( XOR( "Lucida Console" ), 11, FW_NORMAL, FONTFLAG_DROPSHADOW );
-	pixel = Font( XOR( "Lucida Console" ), 8, FW_NORMAL, FONTFLAG_OUTLINE );
+	esp = Font( XOR( "Verdana" ), 12, 400, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS | FONTFLAG_OUTLINE );
+	pixel = Font( XOR( "Verdana" ), 12, FW_NORMAL, FONTFLAG_OUTLINE | FONTFLAG_ANTIALIAS );
 	console = Font( XOR( "Lucida Console" ), 10, FW_DONTCARE, FONTFLAG_DROPSHADOW );
 	Watermarke = Font(XOR("Verdana"), 7, 100, FONTFLAG_DROPSHADOW);
 	hud = Font( XOR( "Lucida Console" ), 12, FW_NORMAL, FONTFLAG_DROPSHADOW );

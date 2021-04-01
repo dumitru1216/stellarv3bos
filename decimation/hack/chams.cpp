@@ -116,11 +116,11 @@ void Chams::RenderFakeChams() {
 	if (!g_cl.m_processing)
 		return;
 
-	if (!g_cfg[XOR("esp_chams_desync_enable")].get<bool>())
+	if (!g_loser.player_esp.desync_chams)
 		return;
 
 	// get color
-	Color color = g_cfg[XOR("esp_chams_desync_color")].get_color();
+	Color color = g_loser.player_esp.desync_chams_color;
 
 	// was the matrix properly setup?
 	if (g_cl.m_fake_matrix) {
@@ -141,7 +141,7 @@ void Chams::RenderFakeChams() {
 		g_cl.m_local->m_BoneCache().m_pCachedBones = g_cl.m_fake_matrix;
 
 		// set material and color.
-		switch (g_cfg[XOR("esp_chams_desync_material")].get<int>()) {
+		switch (g_loser.player_esp.desync_chams_material) {
 		case 0:
 			break;
 		case 1: SetupMaterial(g_chams.debugambientcube, color, false);

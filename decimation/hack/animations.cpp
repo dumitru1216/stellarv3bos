@@ -221,15 +221,21 @@ void Animations::UpdateLocalAnimations() {
 	if (!state) {
 		return;
 	}
-	//fart
+
 	if (!g_csgo.m_cl) {
 		return;
 	}
 
 	// allow re-animating in the same frame.
 	if (state->m_iLastClientSideAnimationUpdateFramecount == g_csgo.m_globals->m_frame) {
-		state->m_iLastClientSideAnimationUpdateFramecount -= 1;
+		state->m_iLastClientSideAnimationUpdateFramecount = g_csgo.m_globals->m_frame - 1;
 	}
+
+	// fix feet.
+	state->m_flFeetYawRate = 0.0f;
+
+	// get layers.
+	g_cl.m_local->GetAnimLayers( g_cl.m_real_layers );
 
 	if (g_cl.m_animate) {
 		// get layers.
@@ -239,8 +245,8 @@ void Animations::UpdateLocalAnimations() {
 		g_cl.m_update = true;
 
 		// update animations.
-		game::UpdateAnimationState(state, g_cl.m_cmd->m_view_angles);
-		g_cl.m_local->UpdateClientSideAnimation();
+		game::UpdateAnimationState( state, g_cl.m_cmd->m_view_angles );
+		g_cl.m_local->UpdateClientSideAnimation( );
 
 		// disallow the game from updating animations this tick.
 		g_cl.m_update = false;
@@ -254,15 +260,19 @@ void Animations::UpdateLocalAnimations() {
 		// remove model sway.
 		g_cl.m_real_layers[12].m_weight = 0.f;
 
+
+		if ( g_cl.m_spawn_time != g_cl.m_local->m_flSpawnTime( ) ) {
+			g_cl.m_update_fake = false;
+			g_cl.m_spawn_time = g_cl.m_local->m_flSpawnTime( );
+		}
+
 		// make sure to only animate once per tick.
 		g_cl.m_animate = false;
 	}
 
-	//std::lerp(g_cl.m_rotation, );
 	// update our layers and poses with the saved ones.
-	g_cl.m_local->SetAnimLayers(g_cl.m_real_layers);
-	g_cl.m_local->SetPoseParameters(g_cl.m_real_poses);
-
+	g_cl.m_local->SetAnimLayers( g_cl.m_real_layers );
+	g_cl.m_local->SetPoseParameters( g_cl.m_real_poses );
 
 	g_cl.m_local->SetAbsAngles(g_cl.m_rotation);
 

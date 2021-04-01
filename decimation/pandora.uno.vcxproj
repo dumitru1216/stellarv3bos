@@ -123,7 +123,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <PerUserRedirection>false</PerUserRedirection>
       <MapExports>false</MapExports>
       <AssemblyDebug>
@@ -183,6 +183,7 @@
     <ClInclude Include="key_handler.h" />
     <ClInclude Include="new_gui\m_elements.h" />
     <ClInclude Include="new_gui\new_framework\m_base\m_base.h" />
+    <ClInclude Include="new_gui\new_framework\m_elements\m_binds\m_binds.h" />
     <ClInclude Include="new_gui\new_framework\m_elements\m_button\m_button.h" />
     <ClInclude Include="new_gui\new_framework\m_elements\m_checkbox\m_checkbox.h" />
     <ClInclude Include="new_gui\new_framework\m_elements\m_colorpicker\m_colorpicker.h" />
@@ -420,6 +421,7 @@
     <ClCompile Include="key_handler.cpp" />
     <ClCompile Include="new_gui\m_elements.cpp" />
     <ClCompile Include="new_gui\new_framework\m_base\m_base.cpp" />
+    <ClCompile Include="new_gui\new_framework\m_elements\m_binds\m_binds.cpp" />
     <ClCompile Include="new_gui\new_framework\m_elements\m_button\m_button.cpp" />
     <ClCompile Include="new_gui\new_framework\m_elements\m_checkbox\m_checkbox.cpp" />
     <ClCompile Include="new_gui\new_framework\m_elements\m_colorpicker\m_colorpicker.cpp" />

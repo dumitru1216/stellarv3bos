@@ -131,13 +131,9 @@ void Hooks::init( ) {
 	m_player.add( Player::CALCVIEW, util::force_cast( &Hooks::CalcView ) );
 	m_player.add( Player::WEAPONSHOOTPOSITION, util::force_cast( &Hooks::Weapon_ShootPosition ) );
 
-	m_net_channel.m_vtable = reinterpret_cast<uintptr_t**>(g_csgo.m_net);
-	m_net_channel.Init();
-	m_net_channel.add(INetChannel::PROCESSPACKET, util::force_cast(&Hooks::ProcessPacket));
-
-	//	m_fire_bullets.m_vtable = reinterpret_cast<uintptr_t**>(g_csgo.TEFireBullets);
-	//	m_fire_bullets.Init();
-	//	m_fire_bullets.add(7, util::force_cast(&Hooks::PostDataUpdate_h));
+	m_net_channel.m_vtable = reinterpret_cast< uintptr_t** >( g_csgo.m_net );
+	m_net_channel.Init( );
+	m_net_channel.add( INetChannel::PROCESSPACKET, util::force_cast( &Hooks::ProcessPacket ) );
 
 	m_device.m_vtable = reinterpret_cast< uintptr_t** >( g_csgo.m_device );
 	m_device.Init( );

@@ -116,24 +116,24 @@ void LagComp::LagRecord_t::Apply( Player* player ) {
 
 
 void LagComp::PostPlayerUpdate( ) {
-	if( !g_cl.m_local ) {
-		if( g_anims.m_ulAnimationInfo.size( ) ) {
+	if ( !g_cl.m_local ) {
+		if ( g_anims.m_ulAnimationInfo.size( ) ) {
 			g_anims.m_ulAnimationInfo.clear( );
 		}
 
 		return;
 	}
 
-	for( auto it = g_anims.m_ulAnimationInfo.begin( ); it != g_anims.m_ulAnimationInfo.end( );) {
+	for ( auto it = g_anims.m_ulAnimationInfo.begin( ); it != g_anims.m_ulAnimationInfo.end( );) {
 		const auto handle = it->first;
 
 		Player* const player = g_csgo.m_entlist->GetClientEntityFromHandle< Player* >( handle );
 
-		if( !player || player != it->second.m_pEntity || !player->alive( ) || !player->enemy( g_cl.m_local ) ) {
-			if( player ) {
+		if ( !player || player != it->second.m_pEntity || !player->alive( ) || !player->enemy( g_cl.m_local ) ) {
+			if ( player ) {
 				player->m_bClientSideAnimation( ) = true;
 			}
-			
+
 			it = g_anims.m_ulAnimationInfo.erase( it );
 		}
 		else {
@@ -141,39 +141,39 @@ void LagComp::PostPlayerUpdate( ) {
 		}
 	}
 
-	for( int i{ 1 }; i <= g_csgo.m_globals->m_max_clients; ++i ) {
+	for ( int i{ 1 }; i <= g_csgo.m_globals->m_max_clients; ++i ) {
 		Player* const player = g_csgo.m_entlist->GetClientEntity< Player* >( i );
-		if( !player )
+		if ( !player )
 			continue;
 
-		if( !player->enemy( g_cl.m_local ) && !player->m_bIsLocalPlayer( ) )
+		if ( !player->enemy( g_cl.m_local ) && !player->m_bIsLocalPlayer( ) )
 			player->m_bClientSideAnimation( ) = true;
 
-		if( !player->alive( ) || !player->enemy( g_cl.m_local ) )
+		if ( !player->alive( ) || !player->enemy( g_cl.m_local ) )
 			continue;
 
-		if( g_anims.m_ulAnimationInfo.find(player->GetRefEHandle()) == g_anims.m_ulAnimationInfo.end( ) )
-			g_anims.m_ulAnimationInfo.insert_or_assign(player->GetRefEHandle(), Animations::AnimationInfo_t( player, { } ) );
+		if ( g_anims.m_ulAnimationInfo.find( player->GetRefEHandle( ) ) == g_anims.m_ulAnimationInfo.end( ) )
+			g_anims.m_ulAnimationInfo.insert_or_assign( player->GetRefEHandle( ), Animations::AnimationInfo_t( player, { } ) );
 	}
 
-	for( auto& ulAnimInfo : g_anims.m_ulAnimationInfo ) {
+	for ( auto& ulAnimInfo : g_anims.m_ulAnimationInfo ) {
 		Animations::AnimationInfo_t& pRecord = ulAnimInfo.second;
 		Player* const pEntity = pRecord.m_pEntity;
 
-		for( auto i = pRecord.m_pRecords.rbegin( ); i != pRecord.m_pRecords.rend( );) {
-			if( g_csgo.m_globals->m_curtime - i->m_flSimulationTime > 1.2f )
+		for ( auto i = pRecord.m_pRecords.rbegin( ); i != pRecord.m_pRecords.rend( );) {
+			if ( g_csgo.m_globals->m_curtime - i->m_flSimulationTime > 1.2f )
 				i = decltype( i ) { ulAnimInfo.second.m_pRecords.erase( next( i ).base( ) ) };
 			else
 				i = next( i );
 		}
 
-		if( pEntity->m_flSimulationTime( ) == pEntity->m_flOldSimulationTime( ) )
+		if ( pEntity->m_flSimulationTime( ) == pEntity->m_flOldSimulationTime( ) )
 			continue;
 
-		CCSGOPlayerAnimState* const state = pEntity->m_PlayerAnimState();
+		CCSGOPlayerAnimState* const state = pEntity->m_PlayerAnimState( );
 
-		if( pRecord.m_flLastSpawnTime != pEntity->m_flSpawnTime( ) ) {
-			if( state ) {
+		if ( pRecord.m_flLastSpawnTime != pEntity->m_flSpawnTime( ) ) {
+			if ( state ) {
 				game::ResetAnimationState( state );
 			}
 
@@ -187,14 +187,14 @@ void LagComp::PostPlayerUpdate( ) {
 
 		LagComp::LagRecord_t* pPreviousRecord = nullptr;
 
-		if( !pRecord.m_pRecords.empty( ) && !pRecord.m_pRecords.front( ).m_bDormant && game::TIME_TO_TICKS( pEntity->m_flSimulationTime( ) - pRecord.m_pRecords.front( ).m_flSimulationTime ) <= 17 ) {
+		if ( !pRecord.m_pRecords.empty( ) && !pRecord.m_pRecords.front( ).m_bDormant && game::TIME_TO_TICKS( pEntity->m_flSimulationTime( ) - pRecord.m_pRecords.front( ).m_flSimulationTime ) <= 17 ) {
 			pPreviousRecord = &pRecord.m_pRecords.front( );
 			pRecord.m_PreviousRecord = pRecord.m_pRecords.front( );
 		}
 
 		const bool bShot = pWeapon && pPreviousRecord && pWeapon->m_fLastShotTime( ) > pPreviousRecord->m_flSimulationTime && pWeapon->m_fLastShotTime( ) <= pEntity->m_flSimulationTime( );
 
-		if( !bShot ) {
+		if ( !bShot ) {
 			ulAnimInfo.second.m_vecLastReliableAngle = pEntity->m_angEyeAngles( );
 		}
 
@@ -204,25 +204,7 @@ void LagComp::PostPlayerUpdate( ) {
 
 		pEntity->SetAnimLayers( pBackupRecord.m_pLayers );
 
-/*		float real_poses[24];
-		float backup_poses[24];
-		const auto backup_abs = pEntity->GetAbsAngles();
-		pEntity->GetPoseParameters(real_poses);
-
-		//real_poses[MOVE_BLEND_CROUCH] = state->m_flDuckAmount;
-		//real_poses[MOVE_BLEND_RUN] = (1.0f - state->m_flStopToFullRunningFraction) * (1.0f - state->m_flDuckAmount);
-		//real_poses[MOVE_BLEND_WALK] = (state->m_flStopToFullRunningFraction) * (1.0f - state->m_flDuckAmount);
-
-		real_poses[BODY_YAW] = 0.5f;
-		pEntity->SetPoseParameters(real_poses);
-		pEntity->SetAbsAngles(ang_t(0.f, state->m_flEyeYaw, 0.f));
-
-		pCurrentRecord.BuildBones(pEntity, false); 
-
-		pEntity->SetAbsAngles(backup_abs);
-		pEntity->SetPoseParameters(backup_poses);*/
-
-		pCurrentRecord.BuildBones(pEntity, true);
+		pCurrentRecord.BuildBones( pEntity, true );
 
 		pBackupRecord.Restore( pEntity );
 

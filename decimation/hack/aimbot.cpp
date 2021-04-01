@@ -396,14 +396,6 @@ bool Aimbot::CheckHitchance(Player* player, const ang_t& angle, LagComp::LagReco
 	constexpr int SEED_MAX = 255;
 
 	float hitchance = g_loser.rage.rage_aimbot_hitchance_amount;
-	//  ’уевый фикс зевсбота
-		/*if (g_cl.m_weapon_id == ZEUS) {
-
-			g_cfg[XOR("rage_aimbot_hitchance")].set<bool>(0);
-
-
-		}*/
-
 
 	size_t total_hits{ }, needed_hits{ (size_t)std::ceil((SEED_MAX * (hitchance / HITCHANCE_MAX))) };
 
@@ -997,12 +989,6 @@ void Aimbot::apply() {
 			m_shoot_next_tick = true;
 		}
 
-
-		/*if (m_shoot_next_tick && g_cfg[XOR("rage_exploit_type")].get<int>() == 1) //дабл тап телепорт сучка
-		{
-			g_cl.m_cmd->m_tick = INT_MAX;
-			g_tickbase.m_shift_data.m_ticks_to_shift = 13;
-		}*/
 	}
 }
 

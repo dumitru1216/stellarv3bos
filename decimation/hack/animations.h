@@ -57,7 +57,8 @@ public:
 
 	LagComp::LagRecord_t m_RealData;
 	LagComp::LagRecord_t m_RealShotData;
-
+	vec3_t   m_local_anim_origin[ 128 ];
+	vec3_t   m_fake_anim_origin[ 128 ];
 	LagComp::LagRecord_t m_FakeData;
 	LagComp::LagRecord_t m_FakeShotData;
 

@@ -23,6 +23,5 @@ void Hooks::PaintTraverse( VPANEL panel, bool repaint, bool force ) {
 
 	if (strstr(g_csgo.m_panel->GetName(panel), "FocusOverlayPanel"))
 		g_csgo.m_panel->set_mouse_input_enabled(panel, GUI::ctx->open);
-	
 
 }
