@@ -17,7 +17,7 @@ void render::init( ) {
 	Watermarke = Font(XOR("Verdana"), 7, 100, FONTFLAG_DROPSHADOW);
 	hud = Font( XOR( "Lucida Console" ), 12, FW_NORMAL, FONTFLAG_DROPSHADOW );
 	cs = Font( XOR( "Counter-Strike" ), 28, FW_MEDIUM, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW );
-	indicator = Font( XOR( "Tahoma" ), 13, FW_BOLD, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW );
+	indicator = Font( XOR( "Verdana" ), 12, 400, FONTFLAG_ANTIALIAS | FONTFLAG_OUTLINE | FONTFLAG_DROPSHADOW );
 
 	g_csgo.m_engine->GetScreenSize( g_cl.m_width, g_cl.m_height );
 }

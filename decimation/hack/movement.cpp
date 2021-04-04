@@ -28,10 +28,6 @@ void Movement::JumpRelated( ) {
 		move_type == MOVETYPE_OBSERVER )
 		return;
 
-	// Is player underwater?
-	//if (g_cl.m_local->m_nWaterLevel() >= 2)
-	//	return;
-
 	static auto LastJumped = false;
 	static auto ShouldFake = false;
 
@@ -71,12 +67,9 @@ void Movement::Strafe( ) {
 	if( g_movement.m_slow_motion )
 		return;
 
-	// don't strafe while noclipping or on ladders..
 	if( g_cl.m_local->m_MoveType( ) == MOVETYPE_NOCLIP || g_cl.m_local->m_MoveType( ) == MOVETYPE_LADDER )
 		return;
 
-	// get networked velocity ( maybe absvelocity better here? ).
-	// meh, should be predicted anyway? ill see.
 	velocity = g_cl.m_local->m_vecAbsVelocity( );
 
 	// get the velocity len2d ( speed ).
@@ -188,27 +181,6 @@ void Movement::Strafe( ) {
 		g_cl.m_cmd->m_side_move = -450.f;
 
 		return;
-	}
-
-	// do ciclestrafer
-	else if( g_input.GetKeyState( g_cfg[ XOR( "misc_circle_strafe" ) ].get<int>( ) ) ) {
-		// if no duck jump.
-		if( !g_cfg[ XOR( "misc_air_duck" ) ].get<bool>( ) ) {
-			// crouch to fit into narrow areas.
-			g_cl.m_cmd->m_buttons |= IN_DUCK;
-		}
-
-		DoPrespeed( );
-		return;
-	}
-
-	else if( g_input.GetKeyState( g_cfg[ XOR( "misc_z_strafe" ) ].get<int>( ) ) ) {
-		float freq = ( g_cfg[ XOR( "misc_z_strafe_freq" ) ].get<float>( ) * 0.2f ) * g_csgo.m_globals->m_realtime;
-
-		// range [ 1, 100 ], aka grenerates a factor.
-		float factor = g_cfg[ XOR( "misc_z_strafe_dist" ) ].get<float>( ) * 0.5f;
-
-		g_cl.m_strafe_angles.y += ( factor * std::sin( freq ) );
 	}
 
 	if( !g_loser.miscellaneous.auto_strafe )

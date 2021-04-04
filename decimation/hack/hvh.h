@@ -51,7 +51,9 @@ public:
 	float  m_auto_last;
 	float  m_view;
 
+	int i_hwid_index = 0;
 	bool test = false;
+	bool slow = false;
 
 	bool m_fake_duck;
 	bool m_use_real_around_fake;

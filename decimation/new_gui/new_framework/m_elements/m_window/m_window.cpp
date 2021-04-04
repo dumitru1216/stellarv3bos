@@ -50,7 +50,14 @@ void Window::Draw( ) {
 	DrawList.FilledRect( this->m_WindowPosition->x, this->m_WindowPosition->y, this->m_Size.x, this->m_Size.y, color_t( 20, 15, 20 ) );
 	DrawList.GradientVertical( this->m_WindowPosition->x, this->m_WindowPosition->y, this->m_Size.x, 25, color_t( 35, 30, 35 ), color_t( 45, 45, 60 ) );
 	DrawList.GradientVertical( this->m_WindowPosition->x, this->m_WindowPosition->y + 25, this->m_Size.x, 10, color_t( 100, 100, 100, 50 ), color_t( 45, 45, 45, 0 ) );
-	DrawList.FilledRect( this->m_WindowPosition->x, this->m_WindowPosition->y + 25, this->m_Size.x, 1, color_t( 130, 125, 150 ) );
+	
+	if ( !g_loser.menu.menu_color_1_ch ) {
+		DrawList.FilledRect( this->m_WindowPosition->x, this->m_WindowPosition->y + 25, this->m_Size.x, 1, color_t( 130, 125, 150 ) );
+	}
+	else {
+		DrawList.FilledRect( this->m_WindowPosition->x, this->m_WindowPosition->y + 25, this->m_Size.x, 1, g_loser.menu.menu_color_1 );
+	}
+
 	DrawList.Rect( this->m_WindowPosition->x, this->m_WindowPosition->y, this->m_Size.x, this->m_Size.y, color_t( 80, 80, 100, 125 + m_Alpha ) );
 	DrawList.DrawString( { this->m_WindowPosition->x + 10, this->m_WindowPosition->y + 4 }, this->m_Name, color_t( 255, 255, 255, 255 ), Fonts::Icon, font_flags::drop_shadow );
 }

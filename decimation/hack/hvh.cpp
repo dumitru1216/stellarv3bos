@@ -2,6 +2,40 @@
 
 HVH g_hvh{ };;
 
+inline float FastSqrt222( float x ) {
+	unsigned int i = *( unsigned int* )&x;
+	i += 127 << 23;
+	i >>= 1;
+	return *( float* )&i;
+}
+#define square( x ) ( x * x )
+void clamp_movement( CUserCmd* pCommand, float fMaxSpeed ) {
+	if ( fMaxSpeed <= 0.f )
+		return;
+	float fSpeed = ( float )( FastSqrt222( square( pCommand->m_forward_move ) + square( pCommand->m_side_move ) + square( pCommand->m_up_move ) ) );
+	if ( fSpeed <= 0.f )
+		return;
+	if ( pCommand->m_buttons & IN_DUCK )
+		fMaxSpeed *= 2.94117647f;
+	if ( fSpeed <= fMaxSpeed )
+		return;
+	float fRatio = fMaxSpeed / fSpeed;
+	pCommand->m_forward_move *= fRatio;
+	pCommand->m_side_move *= fRatio;
+	pCommand->m_up_move *= fRatio;
+}
+void slowwalk( ) {
+	if ( g_cl.m_cmd ) {
+		if ( g_loser.player_esp.slowwalk_x ) {
+			if ( g_hvh.slow ) {
+				if ( g_cl.m_local->m_fFlags( ) & FL_ONGROUND ) {
+					clamp_movement( g_cl.m_cmd, g_loser.rage.slowwalk_value * 2 );
+				}
+			}
+		}
+	}
+}
+
 void HVH::AntiAim() {
 	if (!g_loser.rage.rage_aa_enabled)
 		return;
@@ -52,6 +86,9 @@ void HVH::AntiAim() {
 	m_dir = g_loser.rage.rage_aa_yaw_direction;
 	m_base_angle = g_loser.rage.rage_aa_yaw_base;
 	m_auto_time = g_cfg[XOR("rage_aa_yaw_auto_time")].get<float>();
+
+	/* slowwalk */
+	slowwalk( );
 
 	// update jitter.
 	UpdateJitter();
@@ -379,8 +416,8 @@ void HVH::SendPacket() {
 
 		// commenting in gives the 'p2c effect' where it turns on fakelag between shots, though cba adjusting the current recharging..
 		if (g_tickbase.m_shift_data.m_should_attempt_shift && ((!g_tickbase.m_shift_data.m_should_be_ready && g_tickbase.m_shift_data.m_prepare_recharge) || g_tickbase.m_shift_data.m_needs_recharge || g_tickbase.m_shift_data.m_should_be_ready) && !test) {
-			g_cl.m_should_lag = true;
-			limit = 2;
+			g_cl.m_should_lag = false;
+			limit = 0;
 			mode = 0;
 		}
 

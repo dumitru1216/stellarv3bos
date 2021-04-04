@@ -210,14 +210,6 @@ void Shots::OnHurt( IGameEvent* evt ) {
 					// read the .wav file into memory.
 					auto sound_bytes = util::ReadWavFileIntoMemory( sound );
 
-					// fix this, cant memcpy cos parset_hitsound is nullptr (obviously wtf)
-					// i tried std::memset but no work
-					// idk i've been up the whole night and its like 3 fkn am so i cant think straight
-					// thanks
-					// oh also since ur reading this and im probably asleep can u pls make it so we
-					// only safepoint on body(?) and head, cos rn since i forced safepoints we wont
-					// shoot at legs or feet at all (fucking obviously) 
-					// thank you again
 					{
 						// store the parsed hitsound bytes to a dummy byte.
 						static byte* parsed_hitsound;
@@ -394,7 +386,7 @@ void Shots::OnFrameStage( )
 
 			// this record was deleted already.
 			if( !it->m_record->m_pMatrix_Resolved ) {
-				g_notify.add( XOR( "Damage Rejected" ) );
+				g_notify.add( XOR( "[ damage: rejected due to client side ]" ) );
 				it = m_shots.erase( it );
 				continue;
 			}
@@ -418,9 +410,7 @@ void Shots::OnFrameStage( )
 
 			if( g_cfg[ XOR( "cheat_mode" ) ].get<int>( ) == 0 ) {
 				if( !g_aimbot.CanHit( start, end, it->m_record, it->m_hitbox, true, it->m_matrix ) ) {
-					g_notify.add( XOR( "Missed shot due to spread" ) );
-
-					//g_csgo.m_debug_overlay->AddLineOverlay(start, end, 255, 255, 255, false, 3.f);
+					g_notify.add( XOR( "[ missed shot ] [ reason: spread ]" ) );
 
 					it = m_shots.erase( it );
 
@@ -432,7 +422,7 @@ void Shots::OnFrameStage( )
 			if( !it->m_record->m_bDidShot )
 				++data->m_missed_shots;
 
-			g_notify.add( XOR( "Missed shot due to resolver" ) );
+			g_notify.add( XOR( "[ missed shot ] [ reason: resolver ] [ angle: dinamic ]" ) );
 
 			// we processed this shot, let's delete it.
 			it = m_shots.erase( it );

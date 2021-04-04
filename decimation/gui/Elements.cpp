@@ -526,13 +526,6 @@ void Menu::Visuals() {
 			style->WindowPadding = ImVec2(4, 4);
 			ImGui::CustomSpacing(9.f);
 
-
-			InsertCheckbox(XOR("Offscreen"), g_loser.player_esp.enemies_offscreen);
-			ColorPicker(XOR("Offscreen color"), &g_loser.player_esp.enemies_offscreen_color, false);
-
-
-			InsertCheckbox(XOR("Skeleton"), g_loser.player_esp.enemies_skeleton);
-			ColorPicker(XOR("Skeleton color"), &g_loser.player_esp.enemies_skeleton_color, false);
 			
 			style->ItemSpacing = ImVec2(0, 0);
 			style->WindowPadding = ImVec2(6, 6);
@@ -548,58 +541,7 @@ void Menu::Visuals() {
 			ImGui::CustomSpacing(9.f);
 
 
-			switch (g_loser.player_esp.group_chams) {
-			case 0:
-				InsertCheckbox(XOR("Glow"), g_loser.player_esp.local_glow);
-				ColorPicker(XOR("Glow color"), &g_loser.player_esp.local_glow_color);
-
-				InsertCheckbox(XOR("Chams"), g_loser.player_esp.chams_local_enable);
-				ColorPicker(XOR("Chams color"), &g_loser.player_esp.chams_local_color);
-				
-
-				break;
-			case 1:
-				InsertCheckbox(XOR("Glow"), g_loser.player_esp.enemy_glow);
-				ColorPicker(XOR("Glow color"), &g_loser.player_esp.enemy_glow_color);
-
-				InsertCheckbox(XOR("Chams visible"), g_loser.player_esp.chams_enemies);
-				ColorPicker(XOR("Chams visible color"), &g_loser.player_esp.chams_enemies_color);
-
-				if (g_loser.player_esp.chams_enemies) {
-				
-
-					InsertCheckbox(XOR("Chams invisible"), g_loser.player_esp.chams_enemies_invis);
-					ColorPicker(XOR("Chams invisible color"), &g_loser.player_esp.chams_enemies_invis_color);
-
-					if (g_loser.player_esp.chams_enemies_invis) {
-					
-					}
-				}
-
-				InsertCheckbox(XOR("History chams"), g_loser.player_esp.chams_enemy_backtrack);
-				ColorPicker(XOR("History chams color"), &g_loser.player_esp.chams_enemy_backtrack_color);
-				break;
-			case 2:
-				InsertCheckbox(XOR("Glow"), g_loser.player_esp.team_glow);
-				ColorPicker(XOR("Glow color"), &g_loser.player_esp.team_glow_color);
-
-				InsertCheckbox(XOR("Chams visible"), g_loser.player_esp.chams_team);
-				ColorPicker(XOR("Chams visible color"), &g_loser.player_esp.chams_team_color);
-
-				if (g_loser.player_esp.chams_team)
-				{
-				
-
-					InsertCheckbox(XOR("Chams invisible"), g_loser.player_esp.chams_team_invis);
-					ColorPicker(XOR("Chams invisible color"), &g_loser.player_esp.chams_team_invis_color);
-
-					if (g_loser.player_esp.chams_team_invis) {
-						
-					}
-				}
-
-				break;
-			}
+			
 
 			style->ItemSpacing = ImVec2(0, 0);
 			style->WindowPadding = ImVec2(6, 6);
@@ -642,17 +584,8 @@ void Menu::Visuals() {
 			style->WindowPadding = ImVec2(4, 4);
 			ImGui::CustomSpacing(9.f);
 
-			InsertCheckbox(XOR("Remove scope"), g_loser.player_esp.remove_scope);
-			InsertCheckbox(XOR("Remove visual recoil"), g_loser.player_esp.remove_visual_recoil);
-
-			InsertCheckbox(XOR("Remove smoke effects"), g_loser.player_esp.remove_smoke);
-			InsertCheckbox(XOR("Remove flash effects"), g_loser.player_esp.remove_flash);
-			InsertCheckbox(XOR("Remove fog effects"), g_loser.player_esp.remove_fog);
 
 			InsertCheckbox(XOR("Remove teammate rendering"), g_loser.player_esp.no_draw_team);
-
-			InsertCheckbox(XOR("Grenade prediction"), g_loser.player_esp.grenade_prediction);
-			ColorPicker(XOR("Grenade prediction color"), &g_loser.player_esp.grenade_prediction_color1);
 
 			std::vector<const char*> beam = {
 
@@ -695,21 +628,9 @@ void Menu::Misc() {
 			style->WindowPadding = ImVec2(4, 4);
 			ImGui::CustomSpacing(9.f);
 
-			InsertCheckbox(XOR("Bunny hop"), g_loser.miscellaneous.bhop);
-			InsertCheckbox(XOR("Bunny Duck"), g_loser.miscellaneous.air_duck);
 
 			ImGui::Spacing(); ImGui::NewLine(); ImGui::SameLine(42.f);
-			ImGui::Text(XOR("Fake duck"));
-			InsertKeyBindStyle(XOR("Fake duck key"), g_loser.miscellaneous.fakeduck_key, g_loser.miscellaneous.fakeduck_key_style);
 
-			InsertCheckbox(XOR("Auto-strafer"), g_loser.miscellaneous.auto_strafe);
-			InsertCheckbox(XOR("WASD Strafer"), g_loser.miscellaneous.wasd_strafe);
-
-			InsertCheckbox(XOR("Override field-of-view"), g_loser.miscellaneous.override_fov);
-			if (g_loser.miscellaneous.override_fov) {
-				InsertSlider(XOR("Field-of-view"), g_loser.miscellaneous.override_fov_amount, 90.f, 130.f, XOR("%.0f"));
-				InsertCheckbox(XOR("Override while scoped"), g_loser.miscellaneous.override_fov_scoped);
-			}
 
 			InsertCheckbox(XOR("Override viewmodel field-of-view"), g_loser.miscellaneous.override_viewmodel_fov);
 			if (g_loser.miscellaneous.override_viewmodel_fov) {
@@ -742,9 +663,6 @@ void Menu::Misc() {
 				InsertComboWithoutText(XOR("Hitsound"), g_loser.miscellaneous.hitsound, xui3);
 				InsertSlider(XOR("Hitsound volume"), g_loser.miscellaneous.hitsound_volume, 1.f, 100.f, XOR("%.0f%%"));
 			}
-
-			InsertCheckbox(XOR("Spectators"), g_loser.miscellaneous.spectators);
-			InsertCheckbox(XOR("Preserve killfeed"), g_loser.miscellaneous.preserve_killfeed);
 			InsertCheckbox(XOR("Ragdoll force"), g_loser.miscellaneous.ragdoll_force);
 			InsertCheckbox(XOR("Unlock inventory in-game"), g_loser.miscellaneous.unlock_inventory);
 

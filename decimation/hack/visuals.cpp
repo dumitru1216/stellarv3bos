@@ -315,7 +315,7 @@ void Visuals::Spectators( ) {
 	if( !g_loser.miscellaneous.spectators)
 		return;
 
-	std::vector< std::string > spectators{ XOR( "spectators" ) };
+	std::vector< std::string > spectators{ XOR( "" ) };
 	int h = render::hud.m_size.m_height;
 
 	for( int i{ 1 }; i <= g_csgo.m_globals->m_max_clients; ++i ) {
@@ -347,7 +347,7 @@ void Visuals::Spectators( ) {
 	for( size_t i{ }; i < spectators.size( ); ++i ) {
 		const std::string& name = spectators[ i ];
 
-		render::hud.string( g_cl.m_width - 10, ( g_cl.m_height / 2 ) - ( total_size / 2 ) + ( i * ( h - 1 ) ),
+		render::hud.string( g_cl.m_width - 10, 20 + ( i * ( h - 1 ) ),
 			{ 255, 255, 255, 179 }, name, render::ALIGN_RIGHT );
 	}
 }
@@ -379,6 +379,30 @@ void Visuals::StatusIndicators( ) {
 		if(g_loser.rage.rage_exploit_type > 0 ) {
 			ind.text = g_loser.rage.rage_exploit_type > 1 ? XOR( "HS" ) : XOR( "DT" );
 		}
+
+		indicators.push_back( ind );
+	}
+
+	if ( g_cl.test2 ) {
+		Indicator_t ind{ };
+		ind.color = Color::Palette_t::Green( );
+		ind.text = XOR( "TP" );
+
+		indicators.push_back( ind );
+	}
+
+	if ( g_hvh.slow ) {
+		Indicator_t ind{ };
+		ind.color = Color::Palette_t::Green( );
+		ind.text = XOR( "SLOWWALK" );
+
+		indicators.push_back( ind );
+	}
+
+	if ( g_hvh.test ) {
+		Indicator_t ind{ };
+		ind.color = Color::Palette_t::Green( );
+		ind.text = XOR( "FAKEDUCK" );
 
 		indicators.push_back( ind );
 	}

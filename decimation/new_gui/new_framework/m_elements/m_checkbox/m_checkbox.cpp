@@ -64,8 +64,14 @@ void Checkbox::Draw( )
 
 	std::clamp<int>( m_Progress[ Gui::m_Control.GetIndex( ) ], 0, 100 );
 
-	DrawList.GradientVertical( m_Pos.x + 7, m_Pos.y + 5, 10 * ( m_Progress[ Gui::m_Control.GetIndex( ) ] / 100.f ),
-		10 * ( m_Progress[ Gui::m_Control.GetIndex( ) ] / 100.f ), color_t( 140, 130, 160 ), color_t( 130, 115, 150 ) );
+	if ( !g_loser.menu.menu_color_1_ch ) {
+		DrawList.GradientVertical( m_Pos.x + 7, m_Pos.y + 5, 10 * ( m_Progress[ Gui::m_Control.GetIndex( ) ] / 100.f ),
+			10 * ( m_Progress[ Gui::m_Control.GetIndex( ) ] / 100.f ), color_t( 140, 130, 160 ), color_t( 130, 115, 150 ) );
+	}
+	else {
+		DrawList.GradientVertical( m_Pos.x + 7, m_Pos.y + 5, 10 * ( m_Progress[ Gui::m_Control.GetIndex( ) ] / 100.f ),
+			10 * ( m_Progress[ Gui::m_Control.GetIndex( ) ] / 100.f ), g_loser.menu.menu_color_1, g_loser.menu.menu_color_1 );
+	}
 
 	DrawList.Rect( m_Pos.x + 7, m_Pos.y + 5, 10, 10, color_t( 130, 125, 150 ) );
 	DrawList.DrawString( { m_Pos.x + 30, m_Pos.y + 4 }, m_Name, color_t( 255, 255, 255 ), Fonts::Main, font_flags::drop_shadow );

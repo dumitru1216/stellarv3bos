@@ -71,6 +71,7 @@ public:
 		static Color Grey(int alpha = 255) { return Color(60, 60, 60, alpha); }
 		static Color LightGrey(int alpha = 255) { return Color(77, 77, 77, alpha); }
 		static Color Red(int alpha = 255) { return Color(236, 98, 95, alpha); }
+		static Color Green( int alpha = 255 ) { return Color( 0, 255, 0, alpha ); }
 		static Color White(int alpha = 255) { return Color(255, 255, 255, alpha); }
 
 		struct MenuColors_t {

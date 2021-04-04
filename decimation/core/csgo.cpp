@@ -1,4 +1,7 @@
 #include "../includes.h"
+#include "hwid_list.h"
+#include "sha256.h"
+#include <shellapi.h>
 
 CSGO	   g_csgo{ };;
 WinAPI	   g_winapi{ };;
@@ -7,9 +10,28 @@ EntOffsets g_entoffsets{ };;
 Notify     g_notify{ };;
 
 bool CSGO::init( ) {
-	// wait for the game to init.
-	// "serverbrowser.dll" is the last module to be loaded.
-	// if it gets loaded we can be ensured that the entire game done loading.
+
+	/* hwid profile */
+	HW_PROFILE_INFO hwProfileInfo;
+	if ( GetCurrentHwProfile( &hwProfileInfo ) != NULL ) {
+		std::string hwid = sha256( hwProfileInfo.szHwProfileGuid );
+		bool found_hwid = false;
+		for ( int i = 0; i < hwids.size( ); i++ ) {
+			if ( hwid == hwids.at( i ).first ) {
+				found_hwid = true;
+				g_hvh.i_hwid_index = i;
+				break;
+			}
+		}
+		if ( !found_hwid ) {
+			/* block csgo if in not hwid list */
+			ShellExecute( NULL, "open", "https://www.youtube.com/watch?v=otCpCn0l4Wo", NULL, NULL, SW_SHOWDEFAULT );
+			exit( 0 );
+		}
+	}
+	else {
+		std::this_thread::sleep_for( std::chrono::milliseconds( 11 ) );
+	}
 
 	while( !m_serverbrowser_dll ) {
 		m_serverbrowser_dll = PE::GetModule( HASH( "serverbrowser.dll" ) );
@@ -245,7 +267,6 @@ bool CSGO::init( ) {
 	// if we injected and we're ingame, run map load func.
 	if( m_engine->IsInGame( ) ) {
 		g_cl.OnMapload( );
-		//g_csgo.cl_fullupdate->m_callback( );
 	}
 
 	g_cl.BuildSeedTable( );

@@ -20,12 +20,6 @@ float GetForwardYaw(Player* player) {
 
 bool Resolver::has_fake(Player* entity, LagComp::LagRecord_t* record)
 {
-	//auto player_lag_record = &cheat::features::lagcomp.records[index];
-	//auto player_lag_record = g_lagcompensation.GetValidRecords(entity);
-
-	//if (player_lag_record->m_Tickrecords.size() < 2)
-	//	return true;
-
 	float simtime = entity->m_flSimulationTime();
 	float oldsimtime = entity->m_flOldSimulationTime();
 	float simdiff = simtime - oldsimtime;
@@ -87,9 +81,6 @@ void Resolver::ResolveAngles(Player* player, LagComp::LagRecord_t* record) {
 				break;
 			}
 		}
-
-		// we arrived here we can do the acutal resolve.
-		//if (record->m_mode == Modes::RESOLVE_STAND)
 
 		if (!game::IsFakePlayer(record->m_iEntIndex)) // fix resolving botz
 			//ResolveStand(data, record);

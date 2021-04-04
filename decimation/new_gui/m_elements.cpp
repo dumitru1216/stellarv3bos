@@ -10,6 +10,7 @@
 #include "new_framework/m_elements/m_multi/m_multi.h"
 #include "new_framework/m_elements/m_slider/m_slider.h"
 #include "new_framework/m_elements/m_binds/m_binds.h"
+#include "new_framework/m_elements/m_colorpicker/m_color_t/m_color_t.h"
 
 /* gui externals related */
 Gui::Details Gui::m_Details;
@@ -353,13 +354,14 @@ void Gui::Details::Install( ) {
 
 		} delete m_antiaim_m;
 
-		auto m_antiaim_o = new Groupbox( "other", 4, 250, 45, 208, 95, 1 );
+		auto m_antiaim_o = new Groupbox( "desync", 4, 250, 45, 208, 95, 1 );
 		{
 			m_Window->AddGroup( m_antiaim_o );
 
+
 		} delete m_antiaim_o;
 
-		auto m_antiaim_fakelag = new Groupbox( "fakelag", 5, 250, 175, 208, 140, 1 );
+		auto m_antiaim_fakelag = new Groupbox( "other", 5, 250, 175, 208, 140, 1 );
 		{
 			m_Window->AddGroup( m_antiaim_fakelag );
 			m_antiaim_fakelag->AddElement( new Checkbox( "enable fakelag", &g_loser.rage.rage_fakelag_enabled ) );
@@ -376,6 +378,15 @@ void Gui::Details::Install( ) {
 				m_antiaim_fakelag->AddElement( new Combo( "fakelag mode", &g_loser.rage.rage_fakelag_type, antiaim_fakelag_mode ) );
 			}
 
+			m_antiaim_fakelag->AddElement( new Checkbox( "fakeduck", &g_loser.player_esp.fakeduck_x ) );
+			if ( g_loser.player_esp.fakeduck_x ) {
+				m_antiaim_fakelag->AddElement( new Bind( &g_loser.miscellaneous.fakeduck_key, &g_loser.miscellaneous.fakeduck_key_style ) );
+			}
+			m_antiaim_fakelag->AddElement( new Checkbox( "slowwalk", &g_loser.player_esp.slowwalk_x ) );
+			if ( g_loser.player_esp.slowwalk_x ) {
+				m_antiaim_fakelag->AddElement( new Bind( &g_loser.rage.slowwalk_key, &g_loser.rage.slowwalk_key_style ) );
+				m_antiaim_fakelag->AddElement( new Slider( "slowwalk value", &g_loser.rage.slowwalk_value, 0, 40, "%" ) );
+			}
 			/* initialize scroll */
 			m_antiaim_fakelag->InitScroll( );
 		} delete m_antiaim_fakelag;
@@ -421,6 +432,17 @@ void Gui::Details::Install( ) {
 				m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.enemies_ammo_color, &g_loser.player_esp.hue_ammo ) );
 			}
 
+			/* skeleton esp */
+			m_visuals_players->AddElement( new Checkbox( "skeleton", &g_loser.player_esp.enemies_skeleton ) );
+			if ( g_loser.player_esp.enemies_skeleton ) {
+				m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.enemies_skeleton_color, &g_loser.player_esp.hue_skeleton ) );
+			}
+
+			m_visuals_players->AddElement( new Checkbox( "offscreen arrows", &g_loser.player_esp.enemies_offscreen ) );
+			if ( g_loser.player_esp.enemies_offscreen ) {
+				m_visuals_players->AddElement( new ColorPicker( &g_loser.player_esp.enemies_offscreen_color, &g_loser.player_esp.hue_offscreen ) );
+			}
+
 			/* flags */
 			auto m_flags = new Multi( "flags" );
 			m_flags->AddItem( "money", &g_loser.player_esp.enemies_flags[ 0 ] );
@@ -439,9 +461,36 @@ void Gui::Details::Install( ) {
 			m_visuals_chams->AddElement( new Combo( "entity", &g_loser.player_esp.group_chams, visuals_chams ) );
 			if ( g_loser.player_esp.group_chams == 0 ) {
 				/* entity */
+				m_visuals_chams->AddElement( new Checkbox( "glow", &g_loser.player_esp.enemy_glow ) );
+				if ( g_loser.player_esp.enemy_glow ) {
+					m_visuals_chams->AddElement( new ColorPicker( &g_loser.player_esp.enemy_glow_color, &g_loser.player_esp.hue_glowe, true ) );
+				}
+
+				m_visuals_chams->AddElement( new Checkbox( "enemy chams", &g_loser.player_esp.chams_enemies ) );
+				if ( g_loser.player_esp.chams_enemies ) {
+					m_visuals_chams->AddElement( new Checkbox( "enemy double", &g_loser.player_esp.chams_enemies_invis ) );
+					if ( g_loser.player_esp.chams_enemies_invis ) {
+						m_visuals_chams->AddElement( new ColorPicker( &g_loser.player_esp.chams_enemies_color, &g_loser.player_esp.hue_enech, true ) );
+						m_visuals_chams->AddElement( new Checkbox( "double fix ( aleardy on )", &g_loser.player_esp.chams_enemies_invis ) );
+						m_visuals_chams->AddElement( new ColorPicker( &g_loser.player_esp.chams_enemies_invis_color, &g_loser.player_esp.hue_eneich, true ) );
+						m_visuals_chams->AddElement( new Combo( "enemy chams materials", &g_loser.player_esp.chams_enemies_invis_material, visuals_chams_material ) );
+					}
+				}
+
 			}
 			else if ( g_loser.player_esp.group_chams == 1 ) {
 				/* local */
+				m_visuals_chams->AddElement( new Checkbox( "glow", &g_loser.player_esp.local_glow ) );
+				if ( g_loser.player_esp.local_glow ) {
+					m_visuals_chams->AddElement( new ColorPicker( &g_loser.player_esp.local_glow_color, &g_loser.player_esp.hue_glowl, true ) );
+				}
+
+				m_visuals_chams->AddElement( new Checkbox( "local chams", &g_loser.player_esp.chams_local_enable ) );
+				if ( g_loser.player_esp.chams_local_enable ) {
+					m_visuals_chams->AddElement( new ColorPicker( &g_loser.player_esp.chams_local_color, &g_loser.player_esp.hue_localch, true ) );
+					m_visuals_chams->AddElement( new Combo( "local chams materials", &g_loser.player_esp.chams_local_material, visuals_chams_material ) );
+				}
+
 				m_visuals_chams->AddElement( new Checkbox( "desync chams", &g_loser.player_esp.desync_chams ) );
 				if ( g_loser.player_esp.desync_chams ) {
 					m_visuals_chams->AddElement( new ColorPicker( &g_loser.player_esp.desync_chams_color, &g_loser.player_esp.hue_desync, true ) );
@@ -453,7 +502,7 @@ void Gui::Details::Install( ) {
 			m_visuals_chams->InitScroll( );
 		} delete m_visuals_chams;
 
-		auto m_visuals_world = new Groupbox( "world", 8, 250, 175, 208, 140, 2 );
+		auto m_visuals_world = new Groupbox( "other", 8, 250, 175, 208, 140, 2 );
 		{
 			m_Window->AddGroup( m_visuals_world );
 
@@ -466,14 +515,35 @@ void Gui::Details::Install( ) {
 				m_visuals_world->AddElement( new Slider( "darkness", &g_loser.player_esp.world_night_darkness, 0, 100, "%" ) );
 			}
 
-		} delete m_visuals_world;
+			m_visuals_world->AddElement( new Checkbox( "grenade prediction", &g_loser.player_esp.grenade_prediction ) );
+			if ( g_loser.player_esp.grenade_prediction ) {
+				m_visuals_world->AddElement( new ColorPicker( &g_loser.player_esp.grenade_prediction_color1, &g_loser.player_esp.hue_grenade_prediction, true ) );
+			}
 
+			m_visuals_world->AddElement( new Checkbox( "custom field of view", &g_loser.miscellaneous.override_fov ) );
+			if ( g_loser.miscellaneous.override_fov ) {
+				m_visuals_world->AddElement( new Slider( "field of view ammount", &g_loser.miscellaneous.override_fov_amount, 60, 140, "%" ) );
+				m_visuals_world->AddElement( new Checkbox( "override zoom", &g_loser.miscellaneous.override_fov_scoped ) );
+			}
+
+			m_visuals_world->AddElement( new Checkbox( "remove scope", &g_loser.player_esp.remove_scope ) );
+			m_visuals_world->AddElement( new Checkbox( "remove fog", &g_loser.player_esp.remove_fog ) );
+			m_visuals_world->AddElement( new Checkbox( "remove flash", &g_loser.player_esp.remove_flash ) );
+			m_visuals_world->AddElement( new Checkbox( "remove smoke", &g_loser.player_esp.remove_smoke ) );
+			m_visuals_world->AddElement( new Checkbox( "remove visual recoil", &g_loser.player_esp.remove_visual_recoil ) );
+
+			/* init scroll */
+			m_visuals_world->InitScroll( );
+		} delete m_visuals_world;
 
 		/* settings tab */
 		auto conf = new Groupbox( "misc", 9, 19, 45, 208, 270, 3 );
 		{
 			m_Window->AddGroup( conf );
 			conf->AddElement( new Checkbox( "automatic bhop", &g_loser.miscellaneous.bhop ) );
+			if ( g_loser.miscellaneous.bhop ) {
+				conf->AddElement( new Checkbox( "duck in air", &g_loser.miscellaneous.air_duck ) );
+			}
 			conf->AddElement( new Checkbox( "automatic strafe", &g_loser.miscellaneous.auto_strafe ) );
 			if ( g_loser.miscellaneous.auto_strafe ) {
 				conf->AddElement( new Checkbox( "directional strafe", &g_loser.miscellaneous.wasd_strafe ) );
@@ -483,12 +553,19 @@ void Gui::Details::Install( ) {
 				conf->AddElement( new Bind( &g_loser.miscellaneous.thirdperson_key, &g_loser.miscellaneous.thirdperson_key_style ) );
 				conf->AddElement( new Slider( "thirdperson distance", &g_loser.miscellaneous.thirdperson_distance, 50, 150, "%" ) );
 			}
+			conf->AddElement( new Checkbox( "spectators list", &g_loser.miscellaneous.spectators ) );
+			conf->AddElement( new Checkbox( "save killfeed", &g_loser.miscellaneous.preserve_killfeed ) );
 
 		} delete conf;
 
 		auto conf_scripts = new Groupbox( "other", 10, 250, 45, 208, 95, 3 );
 		{
 			m_Window->AddGroup( conf_scripts );
+			conf_scripts->AddElement( new Checkbox( "menu color elements", &g_loser.menu.menu_color_1_ch ) );
+			if ( g_loser.menu.menu_color_1_ch ) {
+				conf_scripts->AddElement( new ColorPicker2( &g_loser.menu.menu_color_1, &g_loser.menu.menu_color_1_hue ) );
+
+			}
 
 		} delete conf_scripts;
 

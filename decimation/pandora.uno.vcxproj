@@ -137,6 +137,8 @@
     <ClInclude Include="clip.h" />
     <ClInclude Include="clip_lock_impl.h" />
     <ClInclude Include="core\hooks\detours.h" />
+    <ClInclude Include="core\hwid_list.h" />
+    <ClInclude Include="core\sha256.h" />
     <ClInclude Include="gui\Elements.h" />
     <ClInclude Include="gui\Framework\Button\Button.h" />
     <ClInclude Include="gui\Framework\Checkbox\Checkbox.h" />
@@ -187,6 +189,7 @@
     <ClInclude Include="new_gui\new_framework\m_elements\m_button\m_button.h" />
     <ClInclude Include="new_gui\new_framework\m_elements\m_checkbox\m_checkbox.h" />
     <ClInclude Include="new_gui\new_framework\m_elements\m_colorpicker\m_colorpicker.h" />
+    <ClInclude Include="new_gui\new_framework\m_elements\m_colorpicker\m_color_t\m_color_t.h" />
     <ClInclude Include="new_gui\new_framework\m_elements\m_combo\m_combo.h" />
     <ClInclude Include="new_gui\new_framework\m_elements\m_groupbox\m_groupbox.h" />
     <ClInclude Include="new_gui\new_framework\m_elements\m_listbox\m_listbox.h" />
@@ -383,6 +386,7 @@
     <ClCompile Include="clip.cpp" />
     <ClCompile Include="clip_win.cpp" />
     <ClCompile Include="core\hooks\detours.cpp" />
+    <ClCompile Include="core\sha256.cpp" />
     <ClCompile Include="gui\Elements.cpp" />
     <ClCompile Include="gui\Framework\Button\Button.cpp" />
     <ClCompile Include="gui\Framework\Checkbox\Checkbox.cpp" />
@@ -425,6 +429,7 @@
     <ClCompile Include="new_gui\new_framework\m_elements\m_button\m_button.cpp" />
     <ClCompile Include="new_gui\new_framework\m_elements\m_checkbox\m_checkbox.cpp" />
     <ClCompile Include="new_gui\new_framework\m_elements\m_colorpicker\m_colorpicker.cpp" />
+    <ClCompile Include="new_gui\new_framework\m_elements\m_colorpicker\m_color_t\m_color_t.cpp" />
     <ClCompile Include="new_gui\new_framework\m_elements\m_combo\m_combo.cpp" />
     <ClCompile Include="new_gui\new_framework\m_elements\m_groupbox\m_groupbox.cpp" />
     <ClCompile Include="new_gui\new_framework\m_elements\m_listbox\m_listbox.cpp" />

@@ -182,7 +182,6 @@ void __cdecl Detours::CL_Move(float accumulated_extra_samples, bool bFinalTick)
 			if ( g_tickbase.m_shift_data.m_needs_recharge == 0 ) {
 				g_tickbase.m_shift_data.m_should_be_ready = true;
 			}
-
 			return;
 		}
 	}

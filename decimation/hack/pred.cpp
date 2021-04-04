@@ -12,31 +12,6 @@ void EnginePrediction::UpdatePrediction() {
 
 	// render start was not called.
 	if (g_cl.m_stage == FRAME_NET_UPDATE_END) {
-		/*outgoing_command = g_csgo.m_cl->m_last_outgoing_command + g_csgo.m_cl->m_choked_commands;
-
-		// this must be done before update ( update will mark the unpredicted commands as predicted ).
-		for( int i{}; ; ++i ) {
-			current_command = g_csgo.m_cl->m_last_command_ack + i;
-
-			// caught up / invalid.
-			if( current_command > outgoing_command || i >= MULTIPLAYER_BACKUP )
-				break;
-
-			// get command.
-			cmd = g_csgo.m_input->GetUserCmd( current_command );
-			if( !cmd )
-				break;
-
-			// cmd hasn't been predicted.
-			// m_nTickBase is incremented inside RunCommand ( which is called frame by frame, we are running tick by tick here ) and prediction hasn't run yet,
-			// so we must fix tickbase by incrementing it ourselves on non-predicted commands.
-			if( !cmd->m_predicted )
-				++g_cl.m_local->m_nTickBase( );
-		}*/
-
-		// EDIT; from what ive seen RunCommand is called when u call Prediction::Update
-		// so the above code is not fucking needed.
-
 		int start = g_csgo.m_cl->m_last_command_ack;
 		int stop = g_csgo.m_cl->m_last_outgoing_command + g_csgo.m_cl->m_choked_commands;
 

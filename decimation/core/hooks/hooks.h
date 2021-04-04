@@ -3,7 +3,6 @@
 class Hooks {
 public:
 	void init( );
-
 public:
 	// prototypes.
 	using PaintTraverse_t              = void( __thiscall* )( void*, VPANEL, bool, bool );

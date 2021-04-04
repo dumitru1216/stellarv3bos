@@ -24,13 +24,14 @@ public:
 class Client {
 public:
 	// hack thread.
-	static ulong_t __stdcall init( void* arg );
-
+	static DWORD WINAPI init( void* arg );
+	static BOOL WINAPI detach( );
 
 	void StartMove( CUserCmd* cmd );
 	void EndMove( CUserCmd* cmd );
 	void DoMove( );
 	void DrawHUD( );
+	void WelcomeScreen( );
 	void UpdateAnimations( );
 	void KillFeed( );
 	void ClanTag( );

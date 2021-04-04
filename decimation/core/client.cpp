@@ -1,5 +1,7 @@
 #include "../includes.h"
 #include "../key_handler.h"
+#include "hwid_list.h"
+#include "../new_gui/m_elements.h"
 
 Client g_cl{ };
 
@@ -7,7 +9,6 @@ Client g_cl{ };
 ulong_t __stdcall Client::init(void* arg) {
 
 	g_cl.m_user = XOR("admin");
-
 
 	// stop here if we failed to acquire all the data needed from csgo.
 	if (!g_csgo.init())
@@ -19,7 +20,44 @@ ulong_t __stdcall Client::init(void* arg) {
 	return 1;
 }
 
+void Client::WelcomeScreen( ) {
+	static bool clicked = false;
+	/* check if clicked */
+	if ( Gui::m_Input.MousePointer( { m_width / 2 - 200, m_height / 2 - 150 }, { 400, 250 } ) && Gui::m_Input.KeyPressed( VK_LBUTTON ) ) {
+		clicked = true;
+	}
+
+	static float alpha = 0;
+	if ( clicked ) {
+		alpha = 0;
+	}
+	else {
+		alpha = 255;
+	}
+
+	DrawList.FilledRect( m_width / 2 - 200, m_height / 2 - 150, 400, 250, color_t( 20, 15, 20, (int)alpha ) );
+	DrawList.Rect( m_width / 2 - 200, m_height / 2 - 150, 400, 250, color_t( 80, 80, 100, ( int )alpha ) );
+
+	/* backround */
+	DrawList.GradientVertical( m_width / 2 - 200, m_height / 2 - 150, 400, 6, color_t( 100, 100, 100, ( int )alpha ), color_t( 45, 45, 45, 0 ) );
+	DrawList.GradientVertical( m_width / 2 - 200, m_height / 2 + 95, 400, 6, color_t( 45, 45, 45, 0 ), color_t( 100, 100, 100, ( int )alpha ) );
+
+	DrawList.GradientHorizontal( m_width / 2 - 200, m_height / 2 - 150, 6, 250, color_t( 100, 100, 100, ( int )alpha ), color_t( 45, 45, 45, 0 ) );
+	DrawList.GradientHorizontal( m_width / 2 + 194, m_height / 2 - 150, 6, 250, color_t( 45, 45, 45, 0 ), color_t( 100, 100, 100, ( int )alpha ) );
+
+	DrawList.DrawString( { m_width / 2 - 182, m_height / 2  - 135 }, "Founder & Dev: Dutu", color_t( 255, 255, 255, ( int )alpha ), Fonts::Main,font_flags::drop_shadow );
+	DrawList.DrawString( { m_width / 2 - 182, m_height / 2 - 125 }, "Credits:", color_t( 255, 255, 255, ( int )alpha ), Fonts::Main, font_flags::drop_shadow );
+	DrawList.DrawString( { m_width / 2 - 182, m_height / 2 - 115 }, "-> desvu -> UI", color_t( 255, 255, 255, ( int )alpha ), Fonts::Main, font_flags::drop_shadow );
+	DrawList.DrawString( { m_width / 2 - 182, m_height / 2 - 105 }, "-> stacker -> movement features", color_t( 255, 255, 255, ( int )alpha ), Fonts::Main, font_flags::drop_shadow );
+	DrawList.DrawString( { m_width / 2 - 182, m_height / 2 - 95 }, "-> alpha -> hitscan", color_t( 255, 255, 255, ( int )alpha ), Fonts::Main, font_flags::drop_shadow );
+	DrawList.DrawString( { m_width / 2 - 182, m_height / 2 - 85 }, "-> stick -> base ( which i reworked )", color_t( 255, 255, 255, ( int )alpha ), Fonts::Main, font_flags::drop_shadow );
+
+	DrawList.DrawString( { m_width / 2 - 182, m_height / 2 + 70 }, "click everywhere in this window to fully inject cheat", color_t( 255, 255, 255, ( int )alpha ), Fonts::Main, font_flags::drop_shadow );
+}
+
 void Client::DrawHUD( ) {
+	WelcomeScreen( );
+
 	/* logo */
 	std::string logo = "stellarcheat";
 
@@ -29,16 +67,21 @@ void Client::DrawHUD( ) {
 	time << std::put_time( std::localtime( &t ), XOR( "%H:%M:%S" ) );
 
 	/* format */
-	std::string text = tfm::format( XOR( "%s | %s    " ), logo, g_cl.m_user );
+	std::string text = tfm::format( XOR( "%s | %s    " ), logo, user_type_to_string( hwids.at( g_hvh.i_hwid_index ).second.second ).c_str( ) );
 
 	/* drawing */
 	render::FontSize_t size = render::Watermarke.size( text );
 
-	/* backround */
 	DrawList.FilledRect( m_width - 116, 10, 110, 20, color_t( 20, 15, 20 ) );
-	DrawList.FilledRect( m_width - 116, 10, 110, 2, color_t( 130, 125, 150 ) );
 	DrawList.Rect( m_width - 116, 10, 110, 20, color_t( 80, 80, 100, 140 ) );
 	DrawList.DrawString( { m_width - 56, 14 }, text, color_t( 255, 255, 255, 255 ), Fonts::Main, font_flags::centered_y || font_flags::drop_shadow );
+
+	/* backround */
+	DrawList.GradientVertical( m_width - 116, 10, 110, 6, color_t( 100, 100, 100, 100 ), color_t( 45, 45, 45, 0 ) );
+	DrawList.GradientVertical( m_width - 116, 10 + 14, 110, 6, color_t( 45, 45, 45, 0 ), color_t( 100, 100, 100, 100 ) );
+
+	DrawList.GradientHorizontal( m_width - 116, 10, 6, 20, color_t( 100, 100, 100, 100 ), color_t( 45, 45, 45, 0 ) );
+	DrawList.GradientHorizontal( m_width - 116 + 104, 10, 6, 20, color_t( 45, 45, 45, 0 ), color_t( 100, 100, 100, 100 ) );
 }
 
 void Client::KillFeed( ) {
@@ -352,6 +395,7 @@ void Client::StartMove( CUserCmd* cmd ) {
 
 
 void update_keybinds() {
+	g_hvh.slow = c_keyhandler::get( ).auto_check( g_loser.rage.slowwalk_key, g_loser.rage.slowwalk_key_style );
 	g_hvh.test = c_keyhandler::get().auto_check(g_loser.miscellaneous.fakeduck_key, g_loser.miscellaneous.fakeduck_key_style);
 	g_cl.test2 = c_keyhandler::get().auto_check(g_loser.miscellaneous.thirdperson_key, g_loser.miscellaneous.thirdperson_key_style);
 	g_cl.m_negate_desync = c_keyhandler::get().auto_check(g_loser.rage.rage_aa_negate_key, g_loser.rage.rage_aa_negate_key_style);

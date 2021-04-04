@@ -10,6 +10,7 @@
 #include "../m_multi/m_multi.h"
 #include "../m_slider/m_slider.h"
 #include "../m_binds/m_binds.h"
+#include "../m_colorpicker/m_color_t/m_color_t.h"
 
 static int m_Slide[ Gui::m_Maximum ];
 static bool m_SlideMore[ Gui::m_Maximum ];
@@ -256,6 +257,31 @@ void Groupbox::AddElement( ColorPicker* m_Color )
 	}
 
 	delete m_Color;
+}
+void Groupbox::AddElement( ColorPicker2* m_Color2 )
+{
+	if ( GetVisible( ) )
+	{
+		D3DVIEWPORT9 m_Old = DrawList.GetViewport( );
+		SetLimit( );
+
+		m_Color2->m_Pos = { m_Elements.m_OffsetX + 160, m_Elements.m_OffsetY[ m_GroupNum ] - 26 };
+
+		if ( !Gui::m_Control.m_OpenedState[ Gui::m_Control.ControlType::color_tSELECTOR ][ Gui::m_Control.GetIndex( ) ] ) {
+			if ( IsHovered( ) )
+				m_Color2->Update( );
+		}
+		else
+			m_Color2->Update( );
+
+		m_Color2->Draw( );
+
+		Gui::m_Control.SetIndex( Gui::m_Control.GetIndex( ) + 1 );
+
+		DrawList.SetViewport( m_Old );
+	}
+
+	delete m_Color2;
 }
 
 void Groupbox::AddElement( Bind* m_Bind )

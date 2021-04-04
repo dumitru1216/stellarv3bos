@@ -105,6 +105,9 @@ public:
 		int rage_aimbot_baim_key = 0;
 		int rage_aimbot_baim_key_style = 2;
 
+		int slowwalk_key;
+		int slowwalk_key_style;
+		float slowwalk_value;
 
 		bool rage_aa_enabled;
 		int rage_aa_pitch;
@@ -146,6 +149,7 @@ public:
 		float hue_ammo = 100.f;
 		float hue_health = 100.f;
 		float hue_offscreen = 100.f;
+		float hue_skeleton = 100.f;
 
 		bool team_box;
 		Color team_box_color = Color(255, 255, 255);
@@ -172,6 +176,13 @@ public:
 		float box_vertical = 100.f;
 		bool box_outline;
 		bool enemy_glow;
+
+		float hue_glowl;
+		float hue_glowe;
+		float hue_enech;
+		float hue_eneich;
+		float hue_localch;
+		float hue_grenade_prediction;
 
 		bool desync_chams;
 		Color desync_chams_color = Color( 255, 255, 255 );
@@ -207,6 +218,10 @@ public:
 		bool remove_flash;
 		bool remove_fog;
 		bool no_draw_team;
+
+		bool fakeduck_x;
+		bool slowwalk_x;
+
 		bool grenade_prediction;
 		Color grenade_prediction_color1 = Color(255, 255, 255);
 		bool world[2] = { false, false };
@@ -254,6 +269,15 @@ public:
 		bool ragdoll_force;
 		bool unlock_inventory;
 	} miscellaneous;
+	
+	class menu {
+	public:
+		bool menu_color_1_ch;
+		bool menu_color_2_ch;
+
+		float menu_color_1_hue;
+		color_t menu_color_1 = color_t( 140, 130, 160 );
+	} menu;
 
 };
 extern zaebal g_loser;

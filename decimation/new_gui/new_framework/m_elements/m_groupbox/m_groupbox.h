@@ -11,6 +11,7 @@ class Bind;
 class TextInput;
 class Button;
 class ListBox;
+class ColorPicker2;
 
 class Groupbox : public Base {
 public:
@@ -68,6 +69,7 @@ public:
 	void AddElement( TextInput* m_Input );
 	void AddElement( Button* m_Button );
 	void AddElement( ListBox* m_List );
+	void AddElement( ColorPicker2* m_Color2 );
 
 	void AddEmpty( int m_EmptyPlace, int m_Slide );
 	void InitScroll( );

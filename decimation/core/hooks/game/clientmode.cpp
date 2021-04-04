@@ -81,17 +81,6 @@ bool Hooks::CreateMove( float time, CUserCmd* cmd ) {
 	if( g_cl.m_local && !g_cl.m_local->alive( ) )
 		g_inputpred.m_stored_variables.m_flCurtime = g_csgo.m_globals->m_curtime;
 
-	// let's wait till we successfully charged if we want to, hide shots. (this fixes anti-aim and shit, sorry, redundant :/)
-	if (g_tickbase.m_shift_data.m_should_attempt_shift && !g_tickbase.m_shift_data.m_should_disable) {
-		if (g_cfg[XOR("rage_exploit_charged")].get<bool>() && g_cl.m_goal_shift == 7 && (g_tickbase.m_shift_data.m_prepare_recharge || g_tickbase.m_shift_data.m_did_shift_before && !g_tickbase.m_shift_data.m_should_be_ready)) {
-			// are we IN_ATTACK?
-			if (cmd->m_buttons & IN_ATTACK) {
-				// remove the flag :D!
-				cmd->m_buttons &= ~IN_ATTACK;
-			}
-		}
-	}
-
 	// invoke move function.
 	g_cl.OnTick( cmd );
 
@@ -101,17 +90,6 @@ bool Hooks::CreateMove( float time, CUserCmd* cmd ) {
 	}
 	else {
 		g_cl.m_angle = cmd->m_view_angles;
-	}
-
-	// let's wait till we successfully charged if we want to, hide shots.
-	if (g_tickbase.m_shift_data.m_should_attempt_shift && !g_tickbase.m_shift_data.m_should_disable) {
-		if (g_cfg[XOR("rage_exploit_charged")].get<bool>() && g_cl.m_goal_shift == 7 && (g_tickbase.m_shift_data.m_prepare_recharge || g_tickbase.m_shift_data.m_did_shift_before && !g_tickbase.m_shift_data.m_should_be_ready)) {
-			// are we IN_ATTACK?
-			if (cmd->m_buttons & IN_ATTACK) {
-				// remove the flag :D!
-				cmd->m_buttons &= ~IN_ATTACK;
-			}
-		}
 	}
 
 	// make sure to update our animations at the right time.
